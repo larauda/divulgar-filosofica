@@ -1,0 +1,55 @@
+---
+import { getHomePermalink } from '~/utils/permalinks';
+import { trimSlash } from '~/utils/permalinks';
+
+interface Link {
+  text?: string;
+  href?: string;
+}
+
+export interface Props {
+  links?: Array<Link>;
+  isSticky?: boolean;
+}
+
+const { links = [], isSticky = true } = Astro.props;
+const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
+---
+
+<header
+  class:list={[
+    { sticky: isSticky },
+    'top-0 z-40 w-full bg-[#F8F5F0]/95 backdrop-blur-md border-b border-[#214536]/10',
+  ]}
+>
+  <div class="max-w-7xl mx-auto px-8 py-5 flex items-center justify-between">
+    <a
+      href={getHomePermalink()}
+      class="text-[#214536] text-[2rem] leading-none"
+      style="font-family:'Satisfy', cursive;"
+    >
+      Divulgar Filosófica
+    </a>
+
+    <nav class="hidden md:flex items-center gap-8 text-sm font-bold text-[#214536]">
+      {links.map(({ text, href }) => (
+        <a
+          href={href}
+          class:list={[
+            'hover:text-[#A05BEA] transition',
+            { 'text-[#A05BEA]': href === currentPath },
+          ]}
+        >
+          {text}
+        </a>
+      ))}
+    </nav>
+
+    <a
+      href="/registro"
+      class="hidden md:inline-flex bg-[#A05BEA] text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-[#8E4DE8] transition"
+    >
+      Inscripciones
+    </a>
+  </div>
+</header>

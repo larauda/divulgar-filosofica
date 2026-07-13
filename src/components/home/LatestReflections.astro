@@ -1,0 +1,31 @@
+---
+import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
+---
+
+<section class="py-32 bg-white">
+  <div class="max-w-7xl mx-auto px-8">
+    <div class="mb-16">
+      <p class="uppercase tracking-[0.35em] text-xs text-[#8B8B8B] mb-6">
+        BITÁCORA
+      </p>
+
+      <h2
+        class="text-[3.5rem] leading-[0.95] text-[#214536] mb-6"
+        style="font-family:'Satisfy', cursive;"
+      >
+        Últimas reflexiones
+      </h2>
+
+      <p class="text-[17px] leading-7 text-stone-600 max-w-2xl">
+        Publicaciones, lecturas y novedades para seguir pensando en comunidad.
+      </p>
+    </div>
+
+    <div class="rounded-[40px] bg-[#F8F5F0] p-8 md:p-12">
+      <BlogLatestPosts
+        title=""
+        information=""
+      />
+    </div>
+  </div>
+</section>

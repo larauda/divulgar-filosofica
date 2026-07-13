@@ -1,0 +1,52 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
+
+import Hero from '~/components/home/Hero.astro';
+import WhatWeDo from '~/components/home/WhatWeDo.astro';
+import Vision from '~/components/home/Vision.astro';
+import UpcomingActivities from '~/components/home/UpcomingActivities.astro';
+import LatestReflections from '~/components/home/LatestReflections.astro';
+import Footer from '~/components/home/Footer.astro';
+
+
+const metadata = {
+  title: 'Divulgar Filosófica',
+  ignoreTitleTemplate: true,
+};
+---
+
+<Layout metadata={metadata}>
+  <Hero />
+  <WhatWeDo />
+  <Vision />
+  <UpcomingActivities />
+  <LatestReflections />
+
+
+
+  <!-- CTA -->
+  <section class="py-28 bg-[#214536] text-white">
+    <div class="max-w-4xl mx-auto px-8 text-center">
+      <h2
+        class="text-[3.2rem] leading-[1] mb-8"
+        style="font-family:'Satisfy', cursive;"
+      >
+        Participa de las próximas actividades
+      </h2>
+
+      <p class="text-[17px] leading-7 text-white/80 mb-10 max-w-2xl mx-auto">
+        Inscríbete para recibir información sobre talleres, grupos de estudio y encuentros abiertos.
+      </p>
+
+      <a
+        href="/registro"
+        class="inline-flex bg-[#A05BEA] text-white px-7 py-3 rounded-full text-sm font-medium hover:bg-[#8E4DE8] transition duration-300"
+      >
+        Ir al registro →
+      </a>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>

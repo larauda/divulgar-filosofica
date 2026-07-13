@@ -1,0 +1,42 @@
+---
+import HeroImage from '~/assets/images/hero-karin.png';
+---
+
+<section class="min-h-[85vh] bg-[#F8F5F0] flex items-center">
+  <div class="max-w-7xl mx-auto px-8 grid lg:grid-cols-2 gap-10 items-center">
+    <div>
+      <h1
+        class="text-[3.8rem] md:text-[4.5rem] leading-[0.9] text-[#214536] mb-8"
+        style="font-family:'Satisfy', cursive;"
+      >
+        Divulgar Filosófica
+      </h1>
+
+      <div class="space-y-4 text-[17px] leading-7 text-stone-600 max-w-lg">
+        <p>
+          Divulgar Filosófica es un espacio de formación, encuentro y reflexión dedicado a promover la filosofía mediante talleres,
+          grupos de estudio y actividades de divulgación.
+        </p>
+
+        <p>
+          Nace de la convicción de que la filosofía constituye una necesidad comunitaria y no un conocimiento exclusivo reservado a los espacios tradicionales.
+        </p>
+      </div>
+
+      <a
+        href="/actividades"
+        class="inline-flex items-center mt-10 bg-[#A05BEA] text-white px-7 py-3 rounded-full text-sm font-medium hover:bg-[#8E4DE8] transition duration-300"
+      >
+        Conoce las actividades →
+      </a>
+    </div>
+
+    <div class="flex justify-center">
+      <img
+        src={HeroImage.src}
+        alt="Divulgar Filosófica"
+        class="w-full max-w-2xl"
+      />
+    </div>
+  </div>
+</section>

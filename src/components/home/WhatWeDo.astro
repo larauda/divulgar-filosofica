@@ -1,0 +1,76 @@
+---
+import TalleresIcon from '~/assets/images/icon-talleres.png';
+import GruposIcon from '~/assets/images/icon-grupos.png';
+import DivulgacionIcon from '~/assets/images/icon-divulgacion.png';
+---
+
+<!-- QUE HACEMOS -->
+<section class="py-32 bg-[#F8F5F0]">
+  <div class="max-w-7xl mx-auto px-8">
+    <div class="text-center mb-20">
+      <h2
+        class="text-[3.4rem] text-[#214536] mb-5"
+        style="font-family:'Satisfy', cursive;"
+      >
+        ¿Qué hacemos?
+      </h2>
+
+      <p class="text-[17px] leading-7 text-stone-600 max-w-2xl mx-auto">
+        Generamos espacios para pensar, dialogar y construir conocimiento colectivo desde una perspectiva crítica y feminista.
+      </p>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-16">
+      <!-- Talleres -->
+      <div class="text-center">
+        <img
+          src={TalleresIcon.src}
+          alt="Talleres"
+          class="mx-auto w-60 lg:w-64 mb-8 transition-all duration-300 hover:-translate-y-2 hover:rotate-2"
+        />
+
+        <h3 class="text-2xl font-semibold text-[#214536] mb-4">
+          Talleres
+        </h3>
+
+        <p class="text-base leading-5 text-stone-600 max-w-xs mx-auto">
+          Instancias formativas orientadas a profundizar en autoras, corrientes filosóficas y problemáticas contemporáneas.
+        </p>
+      </div>
+
+      <!-- Grupos -->
+      <div class="text-center">
+        <img
+          src={GruposIcon.src}
+          alt="Grupos de estudio"
+          class="mx-auto w-60 lg:w-64 mb-8 transition-all duration-300 hover:-translate-y-2 hover:rotate-2"
+        />
+
+        <h3 class="text-2xl font-semibold text-[#214536] mb-4">
+          Grupos de estudio
+        </h3>
+
+        <p class="text-base leading-5 text-stone-600 max-w-xs mx-auto">
+          Encuentros periódicos para leer, discutir y construir conocimiento colectivo mediante el diálogo.
+        </p>
+      </div>
+
+      <!-- Divulgación -->
+      <div class="text-center">
+        <img
+          src={DivulgacionIcon.src}
+          alt="Divulgación"
+          class="mx-auto w-60 lg:w-64 mb-8 transition-all duration-300 hover:-translate-y-2 hover:rotate-2"
+        />
+
+        <h3 class="text-2xl font-semibold text-[#214536] mb-4">
+          Divulgación
+        </h3>
+
+        <p class="text-base leading-5 text-stone-600 max-w-xs mx-auto">
+          Charlas, encuentros y actividades abiertas que acercan la filosofía a la comunidad.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

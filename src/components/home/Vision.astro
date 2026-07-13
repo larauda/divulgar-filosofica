@@ -1,0 +1,54 @@
+
+---
+import HeroImage from '~/assets/images/Soykarin_01.png';
+---
+
+<!-- NUESTRA MIRADA -->
+<section class="py-32 bg-white">
+  <div class="max-w-7xl mx-auto px-8">
+    <div class="grid lg:grid-cols-2 gap-20 items-center">
+
+      <div class="relative">
+        <div class="absolute -top-8 -left-8 w-40 h-40 rounded-full bg-[#A05BEA]/20"></div>
+        <div class="absolute -bottom-6 -right-6 w-32 h-10 bg-[#E8C98F]/60 rotate-[-8deg]"></div>
+
+        <img
+          src={HeroImage.src}
+          alt="Karin escribiendo"
+          class="relative w-full max-w-xl mx-auto rotate-[-2deg]"
+        />
+      </div>
+
+      <div>
+        <p class="uppercase tracking-[0.35em] text-xs text-[#8B8B8B] mb-6">
+          NUESTRA MIRADA
+        </p>
+
+        <h2
+          class="text-[3.5rem] leading-[0.95] text-[#214536] mb-8"
+          style="font-family:'Satisfy', cursive;"
+        >
+          Creemos que la filosofía pertenece a todas las personas.
+        </h2>
+
+        <div class="space-y-4 text-[16px] leading-6 text-stone-600 max-w-lg">
+          <p>
+            Divulgar Filosófica busca acercar el pensamiento filosófico a la vida cotidiana mediante espacios abiertos de reflexión, aprendizaje y diálogo.
+          </p>
+
+          <p>
+            Nos interesa construir comunidad desde la filosofía, fomentando una mirada crítica, feminista y comprometida con los desafíos contemporáneos.
+          </p>
+        </div>
+
+        <a
+          href="/quien-soy"
+          class="inline-flex items-center mt-8 text-[#A05BEA] font-bold hover:text-[#8E4DE8] transition"
+        >
+          Conocer más →
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
