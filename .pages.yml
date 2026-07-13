@@ -1,0 +1,161 @@
+media:
+  input: public/uploads
+  output: /uploads
+  categories: [image]
+  extensions: [jpg, jpeg, png, webp]
+  rename: safe
+
+content:
+  - name: reflexiones
+    label: Reflexiones
+    type: collection
+    path: src/data/post
+    format: yaml-frontmatter
+    filename: "{year}-{month}-{day}-{primary}.md"
+
+    view:
+      fields: [title, publishDate, category, author]
+      primary: title
+      sort: [publishDate, title]
+      default:
+        sort: publishDate
+        order: desc
+
+    fields:
+      - name: title
+        label: Título
+        type: string
+        required: true
+
+      - name: excerpt
+        label: Resumen
+        type: text
+        required: true
+
+      - name: category
+        label: Categoría
+        type: select
+        required: true
+        options:
+          values:
+            - Filosofía
+            - Feminismos
+            - Política
+            - Cuidados
+            - Ecofeminismo
+            - Comunidad
+
+      - name: tags
+        label: Etiquetas
+        type: string
+        list: true
+        required: false
+
+      - name: image
+        label: Imagen principal
+        type: image
+        required: true
+
+      - name: publishDate
+        label: Fecha de publicación
+        type: date
+        required: true
+
+      - name: author
+        label: Autora
+        type: string
+        required: true
+
+      - name: body
+        label: Contenido
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+          rename: safe
+
+  - name: actividades
+    label: Actividades
+    type: collection
+    path: src/data/activities
+    format: yaml-frontmatter
+    filename: "{year}-{month}-{day}-{primary}.md"
+
+    view:
+      fields: [title, date, type, status]
+      primary: title
+      sort: [date, title]
+      default:
+        sort: date
+        order: desc
+
+    fields:
+      - name: title
+        label: Nombre de la actividad
+        type: string
+        required: true
+
+      - name: type
+        label: Tipo
+        type: select
+        required: true
+        options:
+          values:
+            - Taller
+            - Grupo de estudio
+            - Charla
+            - Encuentro
+
+      - name: image
+        label: Afiche o imagen
+        type: image
+        required: true
+
+      - name: date
+        label: Fecha
+        type: date
+        required: false
+
+      - name: modality
+        label: Modalidad
+        type: select
+        required: true
+        options:
+          values:
+            - Presencial
+            - Online
+            - Híbrida
+
+      - name: location
+        label: Lugar
+        type: string
+        required: false
+
+      - name: status
+        label: Estado
+        type: select
+        required: true
+        options:
+          values:
+            - Inscripciones abiertas
+            - Próximamente
+            - Finalizada
+            - Próxima edición
+
+      - name: registrationUrl
+        label: Enlace de inscripción
+        type: string
+        required: false
+
+      - name: excerpt
+        label: Descripción breve
+        type: text
+        required: true
+
+      - name: body
+        label: Información completa
+        type: rich-text
+        required: false
+        options:
+          format: markdown
+          rename: safe
