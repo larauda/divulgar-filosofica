@@ -159,3 +159,44 @@ content:
         options:
           format: markdown
           rename: safe
+    - name: galeria
+    label: Galería
+    type: collection
+    path: src/data/gallery
+    format: yaml-frontmatter
+    filename: "{year}-{month}-{day}-{primary}.md"
+
+    view:
+      fields: [title, date]
+      primary: title
+      sort: [date, title]
+      default:
+        sort: date
+        order: desc
+
+    fields:
+      - name: title
+        label: Nombre del álbum
+        type: string
+        required: true
+
+      - name: date
+        label: Fecha
+        type: date
+        required: false
+
+      - name: description
+        label: Descripción
+        type: text
+        required: false
+
+      - name: cover
+        label: Imagen de portada
+        type: image
+        required: true
+
+      - name: photos
+        label: Fotografías
+        type: image
+        list: true
+        required: true
