@@ -1,6 +1,6 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
+import { getCollection } from 'astro:content';
 
 import Hero from '~/components/home/Hero.astro';
 import WhatWeDo from '~/components/home/WhatWeDo.astro';
@@ -9,6 +9,16 @@ import UpcomingActivities from '~/components/home/UpcomingActivities.astro';
 import LatestReflections from '~/components/home/LatestReflections.astro';
 import Footer from '~/components/home/Footer.astro';
 
+const galleryAlbums = (await getCollection('gallery'))
+  .sort((a, b) => {
+    const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
+    const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+
+    return dateB - dateA;
+  })
+  .slice(0, 3);
+
+const getGallerySlug = (id: string) => id.replace(/\.(md|mdx)$/, '');
 
 const metadata = {
   title: 'Divulgar Filosófica',
@@ -17,40 +27,152 @@ const metadata = {
 ---
 
 <Layout metadata={metadata}>
+
   <Hero />
+
   <WhatWeDo />
+
   <Vision />
+
   <UpcomingActivities />
+
   <LatestReflections />
 
+  <!-- ================= GALERÍA ================= -->
 
+  <section class="bg-[#F8F5F0] py-24">
+    <div class="mx-auto max-w-7xl px-8">
 
-<!-- CTA -->
-<section class="py-28 bg-[#214536] text-white">
-  <div class="max-w-4xl mx-auto px-8 text-center">
-    <h2
-      class="text-[3.2rem] leading-[1] mb-8"
-      style="font-family:'Satisfy', cursive;"
-    >
-      Conversemos
-    </h2>
+      <div class="mb-14 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
 
-   <p class="text-[24px] leading-9 text-white font-medium mb-6 max-w-3xl mx-auto">
-  ¿Te interesa realizar una charla, taller, grupo de estudio o mediación filosófica en tu comunidad, organización o espacio educativo?
-</p>
+        <div class="max-w-2xl">
 
-<p class="text-[18px] leading-8 text-white/80 mb-10 max-w-2xl mx-auto">
-  Podemos desarrollar una propuesta adaptada a tus necesidades e intereses.
-</p>
+          <p class="mb-3 text-sm uppercase tracking-[0.2em] text-[#214536]">
+            REGISTROS
+          </p>
 
-    <a
-      href="mailto:divulgar.filosofica@gmail.com?subject=Consulta%20desde%20Divulgar%20Filosófica"
-      class="inline-flex bg-[#A05BEA] text-white px-7 py-3 rounded-full text-sm font-medium hover:bg-[#8E4DE8] transition duration-300"
-    >
-      Conversemos →
-    </a>
-  </div>
-</section>
+          <h2
+            class="text-[3.2rem] leading-none text-[#214536]"
+            style="font-family:'Satisfy', cursive;"
+          >
+            Galería
+          </h2>
+
+          <p class="mt-6 text-[20px] leading-8 text-[#214536]/80">
+            Una memoria visual de talleres, encuentros, grupos de estudio y actividades de divulgación filosófica.
+          </p>
+
+        </div>
+
+        <a
+          href="/galeria"
+          class="inline-flex w-fit rounded-full bg-[#A05BEA] px-7 py-3 text-sm font-medium text-white transition hover:bg-[#8E4DE8]"
+        >
+          Ver toda la galería →
+        </a>
+
+      </div>
+
+      {
+        galleryAlbums.length > 0 ? (
+
+          <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+
+            {galleryAlbums.map((album) => (
+
+              <article>
+
+                <a
+                  href={`/galeria/${getGallerySlug(album.id)}`}
+                  class="group block"
+                >
+
+                  <div class="aspect-[4/3] overflow-hidden rounded-3xl bg-white shadow-sm">
+
+                    <img
+                      src={album.data.cover}
+                      alt={album.data.title}
+                      loading="lazy"
+                      class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                    />
+
+                  </div>
+
+                  <div class="pt-5">
+
+                    <h3 class="text-2xl font-semibold text-[#214536]">
+                      {album.data.title}
+                    </h3>
+
+                    {album.data.description && (
+
+                      <p class="mt-3 line-clamp-2 leading-7 text-[#214536]/70">
+                        {album.data.description}
+                      </p>
+
+                    )}
+
+                    <span class="mt-5 inline-block font-medium text-[#A05BEA]">
+                      Ver álbum →
+                    </span>
+
+                  </div>
+
+                </a>
+
+              </article>
+
+            ))}
+
+          </div>
+
+        ) : (
+
+          <div class="rounded-3xl bg-white p-10 text-center">
+
+            <p class="text-[#214536]/70">
+              Aún no hay registros publicados.
+            </p>
+
+          </div>
+
+        )
+      }
+
+    </div>
+
+  </section>
+
+  <!-- ================= CTA ================= -->
+
+  <section class="py-28 bg-[#214536] text-white">
+    <div class="max-w-4xl mx-auto px-8 text-center">
+
+      <h2
+        class="text-[3.2rem] leading-[1] mb-8"
+        style="font-family:'Satisfy', cursive;"
+      >
+        Conversemos
+      </h2>
+
+      <p class="text-[24px] leading-9 text-white font-medium mb-6 max-w-3xl mx-auto">
+        ¿Te interesa realizar una charla, taller, grupo de estudio o mediación filosófica en tu comunidad, organización o espacio educativo?
+      </p>
+
+      <p class="text-[18px] leading-8 text-white/80 mb-10 max-w-2xl mx-auto">
+        Podemos desarrollar una propuesta adaptada a tus necesidades e intereses.
+      </p>
+
+      <a
+        href="mailto:divulgar.filosofica@gmail.com?subject=Consulta%20desde%20Divulgar%20Filosófica"
+        class="inline-flex bg-[#A05BEA] text-white px-7 py-3 rounded-full text-sm font-medium hover:bg-[#8E4DE8] transition duration-300"
+      >
+        Conversemos →
+      </a>
+
+    </div>
+  </section>
 
   <Footer />
+
 </Layout>

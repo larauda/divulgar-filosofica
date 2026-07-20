@@ -1,0 +1,72 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '~/layouts/PageLayout.astro';
+
+const albums = await getCollection('gallery');
+
+const metadata = {
+  title: 'Galería',
+  description: 'Registros fotográficos de las actividades de Divulgar Filosófica.',
+};
+
+const getSlug = (id: string) => id.replace(/\.(md|mdx)$/, '');
+---
+
+<Layout metadata={metadata}>
+  <section class="px-6 py-16 md:py-24">
+    <div class="mx-auto max-w-6xl">
+      <header class="mb-12 max-w-2xl">
+        <p class="mb-3 text-sm font-medium uppercase tracking-[0.2em]">
+          Registros
+        </p>
+
+        <h1 class="text-4xl font-semibold md:text-5xl">
+          Galería
+        </h1>
+
+        <p class="mt-5 text-lg leading-8">
+          Fotografías de nuestros talleres, encuentros y actividades.
+        </p>
+      </header>
+
+      {
+        albums.length > 0 ? (
+          <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {albums.map((album) => (
+              <article>
+                <a href={`/galeria/${getSlug(album.id)}`} class="group block">
+                  <div class="aspect-[4/3] overflow-hidden rounded-2xl bg-neutral-100">
+                    <img
+                      src={album.data.cover}
+                      alt={`Portada de ${album.data.title}`}
+                      loading="lazy"
+                      class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                    />
+                  </div>
+
+                  <div class="pt-5">
+                    <h2 class="text-2xl font-medium">
+                      {album.data.title}
+                    </h2>
+
+                    {album.data.description && (
+                      <p class="mt-3 leading-7">
+                        {album.data.description}
+                      </p>
+                    )}
+
+                    <span class="mt-4 inline-block font-medium">
+                      Ver álbum →
+                    </span>
+                  </div>
+                </a>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p>Aún no hay álbumes publicados.</p>
+        )
+      }
+    </div>
+  </section>
+</Layout>

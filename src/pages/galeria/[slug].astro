@@ -1,0 +1,322 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Layout from '~/layouts/PageLayout.astro';
+
+export async function getStaticPaths() {
+  const albums = await getCollection('gallery');
+
+  return albums.map((album) => ({
+    params: {
+      slug: album.id.replace(/\.(md|mdx)$/, ''),
+    },
+    props: {
+      album,
+    },
+  }));
+}
+
+interface Props {
+  album: CollectionEntry<'gallery'>;
+}
+
+const { album } = Astro.props;
+
+const metadata = {
+  title: album.data.title,
+  description:
+    album.data.description ??
+    `Galería fotográfica de ${album.data.title}.`,
+};
+
+const formatDate = (date?: Date) => {
+  if (!date) return '';
+
+  return new Intl.DateTimeFormat('es-CL', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="px-6 py-16 md:py-24">
+    <div class="mx-auto max-w-6xl">
+      <a href="/galeria" class="mb-8 inline-flex items-center font-medium">
+        ← Volver a Galería
+      </a>
+
+      <header class="mb-12 max-w-3xl">
+        {album.data.date && (
+          <p class="mb-3 text-sm font-medium uppercase tracking-[0.16em]">
+            {formatDate(album.data.date)}
+          </p>
+        )}
+
+        <h1 class="text-4xl font-semibold md:text-5xl">
+          {album.data.title}
+        </h1>
+
+        {album.data.description && (
+          <p class="mt-5 text-lg leading-8">
+            {album.data.description}
+          </p>
+        )}
+      </header>
+
+      <div class="masonry-gallery">
+        {
+          album.data.photos.map((photo, index) => (
+            <button
+              type="button"
+              class="gallery-item"
+              data-gallery-image
+              data-index={index}
+              aria-label={`Abrir fotografía ${index + 1} de ${album.data.title}`}
+            >
+              <img
+                src={photo}
+                alt={`Registro de ${album.data.title}, fotografía ${index + 1}`}
+                loading="lazy"
+              />
+            </button>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <dialog id="gallery-lightbox" class="lightbox">
+    <div class="lightbox-inner">
+      <button id="close-lightbox" type="button" class="lightbox-close" aria-label="Cerrar imagen">
+        ×
+      </button>
+
+      <button
+        id="previous-image"
+        type="button"
+        class="lightbox-arrow lightbox-arrow-left"
+        aria-label="Fotografía anterior"
+      >
+        ←
+      </button>
+
+      <figure class="lightbox-figure">
+        <img id="lightbox-image" src="" alt="" />
+        <figcaption id="lightbox-caption" class="lightbox-caption"></figcaption>
+      </figure>
+
+      <button
+        id="next-image"
+        type="button"
+        class="lightbox-arrow lightbox-arrow-right"
+        aria-label="Fotografía siguiente"
+      >
+        →
+      </button>
+    </div>
+  </dialog>
+
+  <script define:vars={{ photos: album.data.photos, albumTitle: album.data.title }}>
+    const dialog = document.querySelector('#gallery-lightbox');
+    const image = document.querySelector('#lightbox-image');
+    const caption = document.querySelector('#lightbox-caption');
+    const closeButton = document.querySelector('#close-lightbox');
+    const previousButton = document.querySelector('#previous-image');
+    const nextButton = document.querySelector('#next-image');
+    const galleryButtons = document.querySelectorAll('[data-gallery-image]');
+
+    let currentIndex = 0;
+
+    const showImage = (index) => {
+      if (!image || !caption || photos.length === 0) return;
+
+      currentIndex = (index + photos.length) % photos.length;
+
+      image.src = photos[currentIndex];
+      image.alt = `Registro de ${albumTitle}, fotografía ${currentIndex + 1}`;
+      caption.textContent = `${currentIndex + 1} de ${photos.length}`;
+    };
+
+    galleryButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        if (!(dialog instanceof HTMLDialogElement)) return;
+
+        const index = Number(button.dataset.index);
+        showImage(index);
+        dialog.showModal();
+      });
+    });
+
+    closeButton?.addEventListener('click', () => {
+      if (dialog instanceof HTMLDialogElement) {
+        dialog.close();
+      }
+    });
+
+    previousButton?.addEventListener('click', () => {
+      showImage(currentIndex - 1);
+    });
+
+    nextButton?.addEventListener('click', () => {
+      showImage(currentIndex + 1);
+    });
+
+    dialog?.addEventListener('click', (event) => {
+      if (event.target === dialog && dialog instanceof HTMLDialogElement) {
+        dialog.close();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (!(dialog instanceof HTMLDialogElement) || !dialog.open) return;
+
+      if (event.key === 'ArrowLeft') {
+        showImage(currentIndex - 1);
+      }
+
+      if (event.key === 'ArrowRight') {
+        showImage(currentIndex + 1);
+      }
+    });
+  </script>
+</Layout>
+
+<style>
+  .masonry-gallery {
+    column-count: 1;
+    column-gap: 1.25rem;
+  }
+
+  .gallery-item {
+    display: block;
+    width: 100%;
+    margin: 0 0 1.25rem;
+    padding: 0;
+    overflow: hidden;
+    break-inside: avoid;
+    border: 0;
+    border-radius: 1rem;
+    background: transparent;
+    cursor: zoom-in;
+  }
+
+  .gallery-item img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: transform 300ms ease;
+  }
+
+  .gallery-item:hover img {
+    transform: scale(1.015);
+  }
+
+  .lightbox {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+
+  .lightbox::backdrop {
+    background: rgba(0, 0, 0, 0.92);
+  }
+
+  .lightbox-inner {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1rem 2rem;
+  }
+
+  .lightbox-figure {
+    display: flex;
+    max-width: min(90vw, 1200px);
+    max-height: 88vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox-figure img {
+    display: block;
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+  }
+
+  .lightbox-caption {
+    margin-top: 0.75rem;
+    color: white;
+    font-size: 0.875rem;
+  }
+
+  .lightbox-close,
+  .lightbox-arrow {
+    position: absolute;
+    z-index: 2;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    color: white;
+    cursor: pointer;
+  }
+
+  .lightbox-close {
+    top: 1rem;
+    right: 1rem;
+    width: 3rem;
+    height: 3rem;
+    font-size: 2rem;
+  }
+
+  .lightbox-arrow {
+    top: 50%;
+    width: 3rem;
+    height: 3rem;
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+  }
+
+  .lightbox-arrow-left {
+    left: 1rem;
+  }
+
+  .lightbox-arrow-right {
+    right: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .masonry-gallery {
+      column-count: 2;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .masonry-gallery {
+      column-count: 3;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .lightbox-arrow {
+      top: auto;
+      bottom: 1rem;
+    }
+
+    .lightbox-arrow-left {
+      left: calc(50% - 4rem);
+    }
+
+    .lightbox-arrow-right {
+      right: calc(50% - 4rem);
+    }
+  }
+</style>
