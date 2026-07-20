@@ -159,7 +159,8 @@ content:
         options:
           format: markdown
           rename: safe
-    - name: galeria
+
+  - name: galeria
     label: Galería
     type: collection
     path: src/data/gallery
