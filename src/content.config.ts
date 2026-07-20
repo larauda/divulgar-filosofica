@@ -48,7 +48,11 @@ const metadataDefinition = () =>
     .optional();
 
 const postCollection = defineCollection({
-  loader: glob({ pattern: ['*.md', '*.mdx'], base: 'src/data/post' }),
+  loader: glob({
+    pattern: ['*.md', '*.mdx'],
+    base: 'src/data/post',
+  }),
+
   schema: z.object({
     publishDate: z.date().optional(),
     updateDate: z.date().optional(),
@@ -66,6 +70,22 @@ const postCollection = defineCollection({
   }),
 });
 
+const galleryCollection = defineCollection({
+  loader: glob({
+    pattern: ['*.md', '*.mdx'],
+    base: 'src/data/gallery',
+  }),
+
+  schema: z.object({
+    title: z.string(),
+    date: z.date().optional(),
+    description: z.string().optional(),
+    cover: z.string(),
+    photos: z.array(z.string()),
+  }),
+});
+
 export const collections = {
   post: postCollection,
+  gallery: galleryCollection,
 };
