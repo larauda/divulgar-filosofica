@@ -160,6 +160,13 @@ content:
           format: markdown
           rename: safe
 
+      - name: gallery
+        label: Galería relacionada
+        type: string
+        required: false
+        help: Escribe el nombre del archivo de la galería (sin .md).
+
+
   - name: galeria
     label: Galería
     type: collection

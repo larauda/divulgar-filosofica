@@ -85,7 +85,28 @@ const galleryCollection = defineCollection({
   }),
 });
 
+const activitiesCollection = defineCollection({
+  loader: glob({
+    pattern: ['*.md', '*.mdx'],
+    base: 'src/data/activities',
+  }),
+
+  schema: z.object({
+    title: z.string(),
+    type: z.string(),
+    image: z.string(),
+    date: z.date().optional(),
+    modality: z.string(),
+    location: z.string().optional(),
+    status: z.string(),
+    registrationUrl: z.string().optional(),
+    excerpt: z.string(),
+    gallery: z.string().optional(),
+  }),
+});
+
 export const collections = {
   post: postCollection,
   gallery: galleryCollection,
+  activities: activitiesCollection,
 };

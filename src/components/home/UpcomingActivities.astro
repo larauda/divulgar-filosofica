@@ -1,119 +1,214 @@
 ---
-import Angela from '~/assets/images/activities/angela-davis.jpeg';
-import Rita from '~/assets/images/activities/rita-segato.png';
-import Silvia from '~/assets/images/activities/silvia-federici.png';
+import { getCollection } from 'astro:content';
 
-const activities = [
-  {
-    image: Angela,
-    title: 'Cuando la igualdad no alcanza',
-    author: 'Angela Davis',
-    date: 'Próxima edición',
-    place: 'Concepción',
-  },
-  {
-    image: Rita,
-    title: 'Contra pedagogías de la crueldad',
-    author: 'Rita Segato',
-    date: 'Próxima edición',
-    place: 'Concepción',
-  },
-  {
-    image: Silvia,
-    title: 'Maternidad y el castigo del capitalismo',
-    author: 'Silvia Federici',
-    date: 'Archivo',
-    place: 'Concepción',
-  },
-];
+const activities = (await getCollection('activities')).sort((a, b) => {
+  const dateA = a.data.date?.getTime() ?? 0;
+  const dateB = b.data.date?.getTime() ?? 0;
+
+  return dateB - dateA;
+});
+
+const formatDate = (date?: Date) => {
+  if (!date) return '';
+
+  return new Intl.DateTimeFormat('es-CL', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
+};
+
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const getActivityUrl = (id: string) => {
+  const slug = id.replace(/\.(md|mdx)$/, '');
+
+  return `/actividades/${slug}`;
+};
+
+const isUpcomingActivity = (date?: Date) => {
+  if (!date) return false;
+
+  const activityDate = new Date(date);
+  activityDate.setHours(0, 0, 0, 0);
+
+  return activityDate >= today;
+};
 ---
 
-<section class="py-32 bg-[#F8F5F0]">
+<section class="activities-section bg-[#f8f5f0] py-20 sm:py-24">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8">
 
-  <div class="max-w-7xl mx-auto px-8">
-
-    <div class="text-center mb-20">
-
-   <h2
-  class="text-[#214536] mb-6"
-  style="font-family:'Satisfy', cursive;"
->
-  <span class="block text-[4rem] leading-[0.9]">
-    Pensar juntas
-  </span>
-
-  <span class="block text-[3.2rem] leading-[0.95]">
-    también es construir comunidad.
-  </span>
-</h2>
-
-      <p class="text-[17px] leading-7 text-stone-600 max-w-2xl mx-auto">
-        Talleres, grupos de estudio y encuentros abiertos para reflexionar colectivamente desde una perspectiva crítica y feminista.
+    <!-- Encabezado -->
+    <div class="mx-auto mb-14 max-w-3xl text-center">
+      <p class="activities-label mb-4 uppercase tracking-[0.22em] text-[#79558c]">
+        Actividades
       </p>
 
+      <h2 class="activities-title leading-tight text-[#214536]">
+        Pensar juntas también es construir comunidad.
+      </h2>
+
+      <p class="activities-intro mx-auto mt-6 max-w-2xl leading-relaxed text-[#4f5f58]">
+        Conoce nuestros talleres, encuentros, charlas y espacios de reflexión
+        colectiva.
+      </p>
     </div>
 
-    <div class="grid lg:grid-cols-3 gap-10">
+    {
+      activities.length > 0 ? (
+        <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {activities.map((activity) => {
+            const activityUrl = getActivityUrl(activity.id);
 
-      {
-        activities.map((activity) => (
+            const canRegister =
+              isUpcomingActivity(activity.data.date) &&
+              Boolean(activity.data.registrationUrl);
 
-            <article class="group transition duration-300 hover:-translate-y-3">
-  <div
-    class={`overflow-hidden rounded-[28px] shadow-lg bg-white transition-all duration-500 group-hover:rotate-0 group-hover:shadow-xl ${
-      activity.author === 'Angela Davis'
-        ? 'rotate-[-2deg]'
-        : activity.author === 'Rita Segato'
-          ? 'rotate-[2deg]'
-          : 'rotate-[-1deg]'
-    }`}
-  >
-    <img
-      src={activity.image.src}
-      alt={activity.title}
-      class="w-full"
-    />
+            return (
+              <article class="activity-card group flex h-full flex-col overflow-hidden rounded-[2rem] bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
+
+                <!-- Imagen -->
+                <div class="h-72 overflow-hidden bg-[#e9e4dc]">
+                  <img
+                    src={activity.data.image}
+                    alt={activity.data.title}
+                    loading="lazy"
+                    class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                  />
+                </div>
+
+                <!-- Contenido -->
+                <div class="flex flex-1 flex-col p-7">
+                  <div class="mb-5 flex flex-wrap gap-2">
+                    <span class="activity-tag rounded-full bg-[#214536] px-4 py-2 uppercase tracking-wider text-white">
+                      {activity.data.type}
+                    </span>
+
+                    <span class="activity-tag rounded-full bg-[#eee6f1] px-4 py-2 uppercase tracking-wider text-[#79558c]">
+                      {activity.data.status}
+                    </span>
+                  </div>
+
+                  <h3 class="activity-card-title leading-snug text-[#214536]">
+                    {activity.data.title}
+                  </h3>
+
+                  <p class="activity-description mt-4 leading-relaxed text-[#58645f]">
+                    {activity.data.excerpt}
+                  </p>
+
+                  <div class="activity-details mt-6 space-y-2 text-[#52605a]">
+                    {
+                      activity.data.date && (
+                        <p>
+                          <strong class="text-[#214536]">Fecha:</strong>{' '}
+                          {formatDate(activity.data.date)}
+                        </p>
+                      )
+                    }
+
+                    <p>
+                      <strong class="text-[#214536]">Modalidad:</strong>{' '}
+                      {activity.data.modality}
+                    </p>
+
+                    {
+                      activity.data.location && (
+                        <p>
+                          <strong class="text-[#214536]">Lugar:</strong>{' '}
+                          {activity.data.location}
+                        </p>
+                      )
+                    }
+                  </div>
+
+                  <!-- Botones -->
+                  <div class="mt-auto flex flex-wrap gap-3 pt-8">
+                    <a
+                      href={activityUrl}
+                      class="activity-button inline-flex items-center justify-center rounded-full border border-[#79558c] px-5 py-3 text-[#79558c] transition hover:bg-[#79558c] hover:text-white"
+                    >
+                      Ver actividad
+                    </a>
+
+                    {
+                      canRegister && (
+                        <a
+                          href={activity.data.registrationUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="activity-button inline-flex items-center justify-center rounded-full bg-[#79558c] px-5 py-3 text-white transition hover:bg-[#62406f]"
+                        >
+                          Inscribirse
+                        </a>
+                      )
+                    }
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      ) : (
+        <div class="rounded-[2rem] bg-white px-6 py-16 text-center shadow-sm">
+          <p class="activities-intro text-[#58645f]">
+            Próximamente publicaremos nuevas actividades.
+          </p>
+        </div>
+      )
+    }
   </div>
-
-  <div class="mt-7">
-    <p class="text-xs uppercase tracking-[0.35em] text-[#A05BEA] mb-2">
-      {activity.date}
-    </p>
-
-    <h3 class="text-[28px] leading-8 text-[#214536] mb-2 font-bold">
-      {activity.title}
-    </h3>
-
-    <p class="text-stone-500 mb-5">
-      {activity.author}
-    </p>
-
-    <a
-      href="/actividades"
-      class="font-semibold text-[#214536] hover:text-[#A05BEA] transition"
-    >
-      Ver actividad →
-    </a>
-  </div>
-</article>
-
-
-        ))
-      }
-
-    </div>
-
-    <div class="text-center mt-20">
-
-      <a
-        href="/actividades"
-        class="inline-flex bg-[#A05BEA] text-white px-8 py-4 rounded-full hover:bg-[#8E4DE8] transition"
-      >
-        Ver todas las actividades
-      </a>
-
-    </div>
-
-  </div>
-
 </section>
+
+<style>
+  .activities-section {
+    font-family: 'Lato', sans-serif;
+  }
+
+  .activities-label {
+    font-family: 'Lato', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .activities-title {
+    font-family: 'Satisfy', cursive;
+    font-size: clamp(2.8rem, 5vw, 4.7rem);
+    font-weight: 400;
+  }
+
+  .activities-intro {
+    font-family: 'Lato', sans-serif;
+    font-size: 1.1rem;
+  }
+
+  .activity-card-title {
+    font-family: 'Lato', sans-serif;
+    font-size: 1.55rem;
+    font-weight: 700;
+  }
+
+  .activity-description {
+    font-family: 'Lato', sans-serif;
+    font-size: 1rem;
+  }
+
+  .activity-details {
+    font-family: 'Lato', sans-serif;
+    font-size: 0.9rem;
+  }
+
+  .activity-tag {
+    font-family: 'Lato', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 700;
+  }
+
+  .activity-button {
+    font-family: 'Lato', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+</style>
