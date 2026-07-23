@@ -27,6 +27,12 @@ const getActivityUrl = (id: string) => {
   return `/actividades/${slug}`;
 };
 
+const getGalleryUrl = (gallery?: string) => {
+  if (!gallery) return undefined;
+
+  return `/galeria/${gallery}`;
+};
+
 const isUpcomingActivity = (date?: Date) => {
   if (!date) return false;
 
@@ -34,6 +40,23 @@ const isUpcomingActivity = (date?: Date) => {
   activityDate.setHours(0, 0, 0, 0);
 
   return activityDate >= today;
+};
+
+const isFinishedActivity = (date?: Date) => {
+  if (!date) return false;
+
+  const activityDate = new Date(date);
+  activityDate.setHours(0, 0, 0, 0);
+
+  return activityDate < today;
+};
+
+const hasValidRegistrationUrl = (registrationUrl?: string) => {
+  return (
+    typeof registrationUrl === 'string' &&
+    registrationUrl.trim() !== '' &&
+    registrationUrl.trim() !== '#'
+  );
 };
 ---
 
@@ -61,10 +84,22 @@ const isUpcomingActivity = (date?: Date) => {
         <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {activities.map((activity) => {
             const activityUrl = getActivityUrl(activity.id);
+            const galleryUrl = getGalleryUrl(activity.data.gallery);
+
+            const isUpcoming = isUpcomingActivity(activity.data.date);
+            const isFinished = isFinishedActivity(activity.data.date);
 
             const canRegister =
-              isUpcomingActivity(activity.data.date) &&
-              Boolean(activity.data.registrationUrl);
+              isUpcoming &&
+              hasValidRegistrationUrl(activity.data.registrationUrl);
+
+            const canViewGallery =
+              isFinished &&
+              Boolean(galleryUrl);
+
+            const activityStatus = isFinished
+              ? 'Actividad realizada'
+              : activity.data.status || 'Próximamente';
 
             return (
               <article class="activity-card group flex h-full flex-col overflow-hidden rounded-[2rem] bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
@@ -81,24 +116,33 @@ const isUpcomingActivity = (date?: Date) => {
 
                 <!-- Contenido -->
                 <div class="flex flex-1 flex-col p-7">
+
+                  <!-- Etiquetas -->
                   <div class="mb-5 flex flex-wrap gap-2">
                     <span class="activity-tag rounded-full bg-[#214536] px-4 py-2 uppercase tracking-wider text-white">
                       {activity.data.type}
                     </span>
 
                     <span class="activity-tag rounded-full bg-[#eee6f1] px-4 py-2 uppercase tracking-wider text-[#79558c]">
-                      {activity.data.status}
+                      {activityStatus}
                     </span>
                   </div>
 
+                  <!-- Título -->
                   <h3 class="activity-card-title leading-snug text-[#214536]">
                     {activity.data.title}
                   </h3>
 
-                  <p class="activity-description mt-4 leading-relaxed text-[#58645f]">
-                    {activity.data.excerpt}
-                  </p>
+                  <!-- Descripción -->
+                  {
+                    activity.data.excerpt && (
+                      <p class="activity-description mt-4 leading-relaxed text-[#58645f]">
+                        {activity.data.excerpt}
+                      </p>
+                    )
+                  }
 
+                  <!-- Detalles -->
                   <div class="activity-details mt-6 space-y-2 text-[#52605a]">
                     {
                       activity.data.date && (
@@ -109,10 +153,14 @@ const isUpcomingActivity = (date?: Date) => {
                       )
                     }
 
-                    <p>
-                      <strong class="text-[#214536]">Modalidad:</strong>{' '}
-                      {activity.data.modality}
-                    </p>
+                    {
+                      activity.data.modality && (
+                        <p>
+                          <strong class="text-[#214536]">Modalidad:</strong>{' '}
+                          {activity.data.modality}
+                        </p>
+                      )
+                    }
 
                     {
                       activity.data.location && (
@@ -126,15 +174,9 @@ const isUpcomingActivity = (date?: Date) => {
 
                   <!-- Botones -->
                   <div class="mt-auto flex flex-wrap gap-3 pt-8">
-                    <a
-                      href={activityUrl}
-                      class="activity-button inline-flex items-center justify-center rounded-full border border-[#79558c] px-5 py-3 text-[#79558c] transition hover:bg-[#79558c] hover:text-white"
-                    >
-                      Ver actividad
-                    </a>
 
                     {
-                      canRegister && (
+                      canRegister ? (
                         <a
                           href={activity.data.registrationUrl}
                           target="_blank"
@@ -143,8 +185,35 @@ const isUpcomingActivity = (date?: Date) => {
                         >
                           Inscribirse
                         </a>
+                      ) : canViewGallery ? (
+                        <a
+                          href={galleryUrl}
+                          class="activity-button inline-flex items-center justify-center rounded-full bg-[#214536] px-5 py-3 text-white transition hover:bg-[#173228]"
+                        >
+                          Ver galería de imágenes
+                        </a>
+                      ) : isUpcoming ? (
+                        <span
+                          class="activity-button inline-flex cursor-default items-center justify-center rounded-full bg-[#eee9e3] px-5 py-3 text-[#66716c]"
+                        >
+                          Próximamente
+                        </span>
+                      ) : (
+                        <span
+                          class="activity-button inline-flex cursor-default items-center justify-center rounded-full bg-[#eee9e3] px-5 py-3 text-[#66716c]"
+                        >
+                          Actividad realizada
+                        </span>
                       )
                     }
+
+                    <a
+                      href={activityUrl}
+                      class="activity-button inline-flex items-center justify-center rounded-full border border-[#79558c] px-5 py-3 text-[#79558c] transition hover:bg-[#79558c] hover:text-white"
+                    >
+                      Ver actividad
+                    </a>
+
                   </div>
                 </div>
               </article>

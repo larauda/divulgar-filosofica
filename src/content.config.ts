@@ -54,8 +54,8 @@ const postCollection = defineCollection({
   }),
 
   schema: z.object({
-    publishDate: z.date().optional(),
-    updateDate: z.date().optional(),
+    publishDate: z.coerce.date().optional(),
+    updateDate: z.coerce.date().optional(),
     draft: z.boolean().optional(),
 
     title: z.string(),
@@ -78,10 +78,10 @@ const galleryCollection = defineCollection({
 
   schema: z.object({
     title: z.string(),
-    date: z.date().optional(),
+    date: z.coerce.date().optional(),
     description: z.string().optional(),
     cover: z.string(),
-    photos: z.array(z.string()),
+    photos: z.array(z.string()).default([]),
   }),
 });
 
@@ -95,7 +95,7 @@ const activitiesCollection = defineCollection({
     title: z.string(),
     type: z.string(),
     image: z.string(),
-    date: z.date().optional(),
+    date: z.coerce.date().optional(),
     modality: z.string(),
     location: z.string().optional(),
     status: z.string(),

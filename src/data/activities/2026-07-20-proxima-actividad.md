@@ -9,4 +9,3 @@ status: Inscripciones abiertas
 registrationUrl: "#"
 excerpt: d
 ---
-d

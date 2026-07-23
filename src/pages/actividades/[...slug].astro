@@ -1,0 +1,915 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '~/layouts/PageLayout.astro';
+
+export async function getStaticPaths() {
+  const activities = await getCollection('activities');
+
+  return activities.map((activity) => ({
+    params: {
+      slug: activity.id.replace(/\.(md|mdx)$/, ''),
+    },
+    props: {
+      activity,
+    },
+  }));
+}
+
+const { activity } = Astro.props;
+const { Content } = await render(activity);
+
+const {
+  title,
+  type,
+  image,
+  date,
+  modality,
+  location,
+  status,
+  registrationUrl,
+  excerpt,
+  gallery,
+} = activity.data;
+
+/* ---------------------------------------------------------
+   ESTADO DE LA ACTIVIDAD
+--------------------------------------------------------- */
+
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const activityDate = date ? new Date(date) : undefined;
+activityDate?.setHours(0, 0, 0, 0);
+
+const isUpcoming = activityDate ? activityDate >= today : false;
+const isFinished = activityDate ? activityDate < today : false;
+
+const hasRegistrationUrl =
+  typeof registrationUrl === 'string' &&
+  registrationUrl.trim() !== '' &&
+  registrationUrl.trim() !== '#';
+
+const canRegister = isUpcoming && hasRegistrationUrl;
+
+const galleryUrl = gallery
+  ? `/galeria/${gallery}`
+  : undefined;
+
+const activityStatus = isFinished
+  ? 'Actividad realizada'
+  : status || 'Próximamente';
+
+/* ---------------------------------------------------------
+   FORMATO DE FECHA
+--------------------------------------------------------- */
+
+const formatDate = (value?: Date) => {
+  if (!value) return '';
+
+  return new Intl.DateTimeFormat('es-CL', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(value);
+};
+
+/* ---------------------------------------------------------
+   METADATOS
+--------------------------------------------------------- */
+
+const metadata = {
+  title,
+  description: excerpt,
+};
+---
+
+<Layout metadata={metadata}>
+  <main class="activity-page">
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <section class="activity-hero">
+
+      <!-- Imagen -->
+      <div class="activity-hero__media">
+        <img
+          src={image}
+          alt={title}
+          class="activity-hero__image"
+        />
+
+        <!-- Capa oscura -->
+        <div class="activity-hero__overlay"></div>
+      </div>
+
+      <!-- Contenido del hero -->
+      <div class="activity-hero__content">
+        <div class="activity-hero__inner">
+
+          <!-- Etiquetas -->
+          <div class="activity-tags">
+            {
+              type && (
+                <span class="activity-tag activity-tag--glass">
+                  {type}
+                </span>
+              )
+            }
+
+            <span class="activity-tag activity-tag--status">
+              {activityStatus}
+            </span>
+          </div>
+
+          <!-- Título -->
+          <h1 class="activity-title">
+            {title}
+          </h1>
+
+          <!-- Extracto -->
+          {
+            excerpt && (
+              <p class="activity-lead">
+                {excerpt}
+              </p>
+            )
+          }
+        </div>
+      </div>
+
+      <!-- ===================================================
+           TARJETA FLOTANTE
+      ==================================================== -->
+
+      <div class="floating-card-wrapper">
+        <div class="floating-card">
+
+          <!-- Datos -->
+          <div class="floating-card__details">
+
+            {
+              date && (
+                <div class="activity-detail">
+                  <p class="detail-label">
+                    Fecha
+                  </p>
+
+                  <p class="detail-value">
+                    {formatDate(date)}
+                  </p>
+                </div>
+              )
+            }
+
+            {
+              modality && (
+                <div class="activity-detail">
+                  <p class="detail-label">
+                    Modalidad
+                  </p>
+
+                  <p class="detail-value">
+                    {modality}
+                  </p>
+                </div>
+              )
+            }
+
+            {
+              location && (
+                <div class="activity-detail">
+                  <p class="detail-label">
+                    Lugar
+                  </p>
+
+                  <p class="detail-value">
+                    {location}
+                  </p>
+                </div>
+              )
+            }
+
+          </div>
+
+          <!-- Acción -->
+          <div class="floating-card__action">
+  {
+    canRegister ? (
+      <a
+        href={registrationUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="activity-button activity-button--purple"
+      >
+        Inscribirse
+      </a>
+    ) : isFinished ? (
+      galleryUrl ? (
+        <a
+          href={galleryUrl}
+          class="activity-button activity-button--green"
+        >
+          Ver galería
+        </a>
+      ) : (
+        <span class="activity-button activity-button--disabled">
+          Galería próximamente
+        </span>
+      )
+    ) : (
+      <span class="activity-button activity-button--disabled">
+        Próximamente
+      </span>
+    )
+  }
+</div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         CONTENIDO EDITORIAL
+    ====================================================== -->
+
+    <section class="activity-editorial">
+      <div class="activity-editorial__grid">
+
+        <!-- Contenido principal -->
+        <article class="activity-content">
+          <p class="section-label">
+            Sobre la actividad
+          </p>
+
+          <div class="prose-content">
+            <Content />
+          </div>
+        </article>
+
+        <!-- Información lateral -->
+        <aside class="activity-sidebar">
+          <div class="activity-sidebar__card">
+
+            <p class="section-label">
+              Información
+            </p>
+
+            <h2 class="aside-title">
+              {
+                isFinished
+                  ? 'Este encuentro ya fue realizado.'
+                  : 'Participa en este encuentro.'
+              }
+            </h2>
+
+            <p class="aside-text">
+              {
+                isFinished
+                  ? galleryUrl
+                    ? 'Revisa las fotografías y revive los momentos de esta actividad.'
+                    : 'Pronto incorporaremos registros y materiales de esta actividad.'
+                  : canRegister
+                    ? 'Consulta los detalles y completa tu inscripción mediante el enlace disponible.'
+                    : 'Muy pronto compartiremos más información sobre esta actividad.'
+              }
+            </p>
+
+            {
+              canRegister && (
+                <a
+                  href={registrationUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="activity-button activity-button--purple activity-button--full"
+                >
+                  Inscribirse
+                </a>
+              )
+            }
+
+            {
+              isFinished && galleryUrl && (
+                <a
+                  href={galleryUrl}
+                  class="activity-button activity-button--green activity-button--full"
+                >
+                  Ver galería
+                </a>
+              )
+            }
+
+            <a
+              href="/#actividades"
+              class="activity-button activity-button--outline activity-button--full"
+            >
+              Ver otras actividades
+            </a>
+
+          </div>
+        </aside>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         CIERRE CON GALERÍA
+    ====================================================== -->
+
+    {
+      isFinished && galleryUrl && (
+        <section class="activity-closing">
+          <div class="activity-closing__inner">
+
+            <p class="section-label section-label--light">
+              Memoria del encuentro
+            </p>
+
+            <h2 class="closing-title">
+              Revive esta actividad a través de su registro fotográfico.
+            </h2>
+
+            <a
+              href={galleryUrl}
+              class="activity-button activity-button--light"
+            >
+              Explorar la galería
+            </a>
+
+          </div>
+        </section>
+      )
+    }
+
+  </main>
+</Layout>
+
+<style>
+  /* =========================================================
+     BASE
+  ========================================================== */
+
+  .activity-page {
+    background: #f8f5f0;
+    font-family: 'Lato', sans-serif;
+    color: #214536;
+  }
+
+  /* =========================================================
+     HERO
+  ========================================================== */
+
+  .activity-hero {
+    position: relative;
+    min-height: 850px;
+    height: calc(100vh - 90px);
+    overflow: visible;
+  }
+
+  .activity-hero__media {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .activity-hero__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transform: scale(1.03);
+  }
+
+  .activity-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.32) 0%,
+        rgba(0, 0, 0, 0.48) 48%,
+        rgba(20, 47, 39, 0.92) 100%
+      );
+  }
+
+  .activity-hero__content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    height: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding:
+      9rem
+      4rem
+      13rem;
+  }
+
+  .activity-hero__inner {
+    width: 100%;
+    max-width: 920px;
+  }
+
+  /* =========================================================
+     ETIQUETAS
+  ========================================================== */
+
+  .activity-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .activity-tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 0.5rem 1.25rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: white;
+  }
+
+  .activity-tag--glass {
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(12px);
+  }
+
+  .activity-tag--status {
+    background: #79558c;
+  }
+
+  /* =========================================================
+     TÍTULO Y EXTRACTO
+  ========================================================== */
+
+  .activity-title {
+    max-width: 920px;
+    margin: 0;
+    font-family: 'Satisfy', cursive;
+    font-size: clamp(4rem, 7.4vw, 7.5rem);
+    font-weight: 400;
+    line-height: 0.98;
+    color: white;
+    text-shadow:
+      0 10px 35px rgba(0, 0, 0, 0.42);
+  }
+
+  .activity-lead {
+    max-width: 760px;
+    margin: 2rem 0 0;
+    font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.92);
+    text-shadow:
+      0 3px 18px rgba(0, 0, 0, 0.42);
+  }
+
+  /* =========================================================
+     TARJETA FLOTANTE
+  ========================================================== */
+
+  .floating-card-wrapper {
+    position: absolute;
+    z-index: 20;
+    left: 50%;
+    bottom: 0;
+    width: 100%;
+    max-width: 1150px;
+    padding: 0 1.5rem;
+    transform: translate(-50%, 50%);
+  }
+
+  .floating-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    overflow: hidden;
+    border: 1px solid rgba(121, 85, 140, 0.1);
+    border-radius: 2.5rem;
+    background: white;
+    box-shadow:
+      0 30px 80px rgba(27, 40, 35, 0.18);
+  }
+
+  .floating-card__details {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem;
+    padding: 2.5rem;
+  }
+
+  .activity-detail {
+    min-width: 0;
+  }
+
+  .detail-label,
+  .section-label {
+    margin: 0;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #79558c;
+  }
+
+  .detail-value {
+    margin: 0.55rem 0 0;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.45;
+    color: #214536;
+  }
+
+  .floating-card__action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 210px;
+    padding: 2.5rem;
+    border-left: 1px solid #e8e2db;
+  }
+
+  /* =========================================================
+     BOTONES
+  ========================================================== */
+
+  .activity-button {
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.6rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    transition:
+      transform 180ms ease,
+      background-color 180ms ease,
+      color 180ms ease,
+      border-color 180ms ease;
+  }
+
+  .activity-button:hover {
+    transform: translateY(-2px);
+  }
+
+  .activity-button--purple {
+    background: #79558c;
+    color: white;
+  }
+
+  .activity-button--purple:hover {
+    background: #62406f;
+  }
+
+  .activity-button--green {
+    background: #214536;
+    color: white;
+  }
+
+  .activity-button--green:hover {
+    background: #173228;
+  }
+
+  .activity-button--disabled {
+    cursor: default;
+    background: #f1ece8;
+    color: #777d7a;
+  }
+
+  .activity-button--disabled:hover {
+    transform: none;
+  }
+
+  .activity-button--outline {
+    border-color: #79558c;
+    background: transparent;
+    color: #79558c;
+  }
+
+  .activity-button--outline:hover {
+    background: #79558c;
+    color: white;
+  }
+
+  .activity-button--light {
+    margin-top: 2rem;
+    background: white;
+    color: #214536;
+  }
+
+  .activity-button--light:hover {
+    background: #f0ece7;
+  }
+
+  .activity-button--full {
+    width: 100%;
+    margin-top: 0.85rem;
+  }
+
+  /* =========================================================
+     CONTENIDO EDITORIAL
+  ========================================================== */
+
+  .activity-editorial {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding:
+      12rem
+      2rem
+      7rem;
+  }
+
+  .activity-editorial__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 310px;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .activity-content {
+    width: 100%;
+    max-width: 760px;
+  }
+
+  .prose-content {
+    margin-top: 1.5rem;
+    font-size: 1.08rem;
+    line-height: 1.9;
+    color: #46534e;
+  }
+
+  .prose-content :global(p) {
+    margin: 0 0 1.5rem;
+  }
+
+  .prose-content :global(h2) {
+    margin: 2.8rem 0 1rem;
+    font-family: 'Satisfy', cursive;
+    font-size: 2.8rem;
+    font-weight: 400;
+    line-height: 1.15;
+    color: #214536;
+  }
+
+  .prose-content :global(h3) {
+    margin: 2.25rem 0 0.8rem;
+    font-size: 1.4rem;
+    font-weight: 800;
+    line-height: 1.3;
+    color: #214536;
+  }
+
+  .prose-content :global(ul),
+  .prose-content :global(ol) {
+    margin: 0 0 1.5rem;
+    padding-left: 1.4rem;
+  }
+
+  .prose-content :global(ul) {
+    list-style: disc;
+  }
+
+  .prose-content :global(ol) {
+    list-style: decimal;
+  }
+
+  .prose-content :global(li) {
+    margin-bottom: 0.55rem;
+  }
+
+  .prose-content :global(a) {
+    font-weight: 700;
+    color: #79558c;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .prose-content :global(blockquote) {
+    margin: 2.5rem 0;
+    padding: 1rem 0 1rem 1.5rem;
+    border-left: 4px solid #79558c;
+    font-size: 1.2rem;
+    font-style: italic;
+    color: #214536;
+  }
+
+  .prose-content :global(img) {
+    display: block;
+    width: 100%;
+    margin: 2.5rem 0;
+    border-radius: 1.5rem;
+  }
+
+  /* =========================================================
+     SIDEBAR
+  ========================================================== */
+
+  .activity-sidebar {
+    padding-top: 2.2rem;
+  }
+
+  .activity-sidebar__card {
+    position: sticky;
+    top: 7rem;
+    padding: 2rem;
+    border-radius: 2.5rem;
+    background: #eee6f1;
+  }
+
+  .aside-title {
+    margin: 1rem 0 0;
+    font-family: 'Satisfy', cursive;
+    font-size: 2.2rem;
+    font-weight: 400;
+    line-height: 1.15;
+    color: #214536;
+  }
+
+  .aside-text {
+    margin: 1rem 0 1.4rem;
+    font-size: 0.98rem;
+    line-height: 1.7;
+    color: #52605a;
+  }
+
+  /* =========================================================
+     CIERRE
+  ========================================================== */
+
+  .activity-closing {
+    padding: 6rem 2rem;
+    background: #214536;
+    text-align: center;
+  }
+
+  .activity-closing__inner {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .section-label--light {
+    color: rgba(255, 255, 255, 0.68);
+  }
+
+  .closing-title {
+    margin: 1rem 0 0;
+    font-family: 'Satisfy', cursive;
+    font-size: clamp(2.7rem, 5vw, 4.6rem);
+    font-weight: 400;
+    line-height: 1.1;
+    color: white;
+  }
+
+  /* =========================================================
+     TABLET
+  ========================================================== */
+
+  @media (max-width: 1023px) {
+    .activity-hero {
+      min-height: 780px;
+    }
+
+    .activity-hero__content {
+      padding:
+        8rem
+        2.5rem
+        12rem;
+    }
+
+    .floating-card {
+      grid-template-columns: 1fr;
+    }
+
+    .floating-card__action {
+      min-width: 0;
+      padding: 1.5rem 2rem 2rem;
+      border-top: 1px solid #e8e2db;
+      border-left: 0;
+    }
+
+    .activity-editorial {
+      padding-top: 15rem;
+    }
+
+    .activity-editorial__grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
+    .activity-content {
+      max-width: 100%;
+    }
+
+    .activity-sidebar {
+      padding-top: 0;
+    }
+
+    .activity-sidebar__card {
+      position: static;
+    }
+  }
+
+  /* =========================================================
+     MÓVIL
+  ========================================================== */
+
+  @media (max-width: 639px) {
+    .activity-hero {
+      height: auto;
+      min-height: 760px;
+    }
+
+    .activity-hero__image {
+      object-position: center;
+      transform: none;
+    }
+
+    .activity-hero__content {
+      min-height: 760px;
+      padding:
+        7rem
+        1.5rem
+        13.5rem;
+    }
+
+    .activity-title {
+      font-size: clamp(3.4rem, 17vw, 5.2rem);
+      line-height: 1;
+    }
+
+    .activity-lead {
+      margin-top: 1.5rem;
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    .activity-tag {
+      padding: 0.45rem 1rem;
+      font-size: 0.65rem;
+    }
+
+    .floating-card-wrapper {
+      padding: 0 1rem;
+    }
+
+    .floating-card {
+      border-radius: 1.8rem;
+    }
+
+    .floating-card__details {
+      grid-template-columns: 1fr;
+      gap: 1.35rem;
+      padding: 1.7rem;
+    }
+
+    .floating-card__action {
+      padding: 1.25rem 1.7rem 1.7rem;
+    }
+
+    .floating-card__action .activity-button {
+      width: 100%;
+    }
+
+    .activity-editorial {
+      padding:
+        17rem
+        1.5rem
+        5rem;
+    }
+
+    .activity-editorial__grid {
+      gap: 2.5rem;
+    }
+
+    .prose-content {
+      font-size: 1rem;
+      line-height: 1.8;
+    }
+
+    .prose-content :global(h2) {
+      font-size: 2.35rem;
+    }
+
+    .activity-sidebar__card {
+      padding: 1.7rem;
+      border-radius: 1.8rem;
+    }
+
+    .activity-closing {
+      padding: 5rem 1.5rem;
+    }
+  }
+</style>

@@ -1,7 +1,7 @@
 ---
-title: Taller Rita  Segato I
+title: Taller Rita Segato I
 date: 2026-06-20
-description: Taller Rita  Segato I
+description: Registro fotográfico del Taller Rita Segato I.
 cover: /uploads/img7306-2.jpg
 photos:
   - /uploads/img7277-1.jpg

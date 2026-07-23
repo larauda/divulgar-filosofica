@@ -162,10 +162,15 @@ content:
 
       - name: gallery
         label: Galería relacionada
-        type: string
+        type: reference
         required: false
-        help: Escribe el nombre del archivo de la galería (sin .md).
-
+        description: Selecciona el álbum fotográfico asociado a esta actividad.
+        options:
+          collection: galeria
+          search: "title"
+          value: "{name}"
+          label: "{primary}"
+          
 
   - name: galeria
     label: Galería

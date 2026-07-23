@@ -6,6 +6,7 @@ date: 2026-06-20
 modality: Presencial
 location: Lincoyán, Concepción
 status: Finalizada
+gallery: 2026-07-20-taller-rita-segato-i
 registrationUrl: "#"
 excerpt: Un taller de filosofía política feminista basado en la obra de Rita
   Segato, enfocado en comprender las violencias contemporáneas y las formas de
