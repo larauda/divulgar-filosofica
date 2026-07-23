@@ -105,8 +105,36 @@ const activitiesCollection = defineCollection({
   }),
 });
 
+const agendaCollection = defineCollection({
+  loader: glob({
+    pattern: ['*.md', '*.mdx'],
+    base: 'src/data/agenda',
+  }),
+
+  schema: z.object({
+    title: z.string(),
+    type: z.string(),
+    organizer: z.string(),
+    image: z.string(),
+
+    date: z.coerce.date().optional(),
+    time: z.string().optional(),
+
+    modality: z.string(),
+    location: z.string().optional(),
+
+    status: z.string(),
+    registrationUrl: z.string().optional(),
+
+    excerpt: z.string(),
+
+    featured: z.boolean().optional(),
+  }),
+});
+
 export const collections = {
   post: postCollection,
   gallery: galleryCollection,
   activities: activitiesCollection,
+  agenda: agendaCollection,
 };
