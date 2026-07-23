@@ -152,6 +152,17 @@ content:
         type: text
         required: true
 
+      - name: gallery
+        label: Galería relacionada
+        type: reference
+        required: false
+        description: Selecciona el álbum fotográfico asociado a esta actividad.
+        options:
+          collection: galeria
+          search: "title"
+          value: "{name}"
+          label: "{primary}"
+
       - name: body
         label: Información completa
         type: rich-text
@@ -160,7 +171,7 @@ content:
           format: markdown
           rename: safe
 
-   - name: agenda
+  - name: agenda
     label: Agenda Filosófica
     type: collection
     path: src/data/agenda
@@ -219,7 +230,7 @@ content:
         label: Hora
         type: string
         required: false
-        description: Ejemplo: 18:30 hrs.
+        description: "Ejemplo: 18:30 hrs."
 
       - name: modality
         label: Modalidad
@@ -272,19 +283,6 @@ content:
         options:
           format: markdown
           rename: safe
-          
-
-      - name: gallery
-        label: Galería relacionada
-        type: reference
-        required: false
-        description: Selecciona el álbum fotográfico asociado a esta actividad.
-        options:
-          collection: galeria
-          search: "title"
-          value: "{name}"
-          label: "{primary}"
-          
 
   - name: galeria
     label: Galería
