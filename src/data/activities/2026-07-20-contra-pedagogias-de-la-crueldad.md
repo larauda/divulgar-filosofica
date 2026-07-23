@@ -6,12 +6,11 @@ date: 2026-06-20
 modality: Presencial
 location: Lincoyán, Concepción
 status: Finalizada
-gallery: 2026-07-20-taller-rita-segato-i
 registrationUrl: "#"
 excerpt: Un taller de filosofía política feminista basado en la obra de Rita
   Segato, enfocado en comprender las violencias contemporáneas y las formas de
   construir vínculos desde el cuidado y la comunidad.
-gallery: Taller
+gallery: 2026-07-20-taller-rita-segato-i.md
 ---
 **Contra pedagogías de la crueldad** fue un taller de filosofía política feminista centrado en el pensamiento de **Rita Segato**, a partir de su análisis sobre las violencias estructurales y las dinámicas culturales que las sostienen.
 
