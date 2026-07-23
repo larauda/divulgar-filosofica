@@ -10,6 +10,7 @@ registrationUrl: "#"
 excerpt: Un taller de filosofía política feminista basado en la obra de Rita
   Segato, enfocado en comprender las violencias contemporáneas y las formas de
   construir vínculos desde el cuidado y la comunidad.
+gallery: Taller
 ---
 **Contra pedagogías de la crueldad** fue un taller de filosofía política feminista centrado en el pensamiento de **Rita Segato**, a partir de su análisis sobre las violencias estructurales y las dinámicas culturales que las sostienen.
 
