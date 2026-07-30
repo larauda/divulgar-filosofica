@@ -319,9 +319,18 @@ content:
         label: Imagen de portada
         type: image
         required: true
+        options:
+          extensions: [jpg, jpeg, png, webp]
+          rename: safe
 
       - name: photos
         label: Fotografías
         type: image
-        list: true
         required: true
+        description: Selecciona o sube varias fotografías para este álbum.
+        options:
+          multiple:
+            max: 100
+          unique: true
+          extensions: [jpg, jpeg, png, webp]
+          rename: safe
