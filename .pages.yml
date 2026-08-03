@@ -284,7 +284,7 @@ content:
           format: markdown
           rename: safe
 
-    - name: galeria
+  - name: galeria
     label: Galería
     type: collection
     path: src/data/gallery
@@ -323,14 +323,8 @@ content:
           extensions: [jpg, jpeg, png, webp]
           rename: safe
 
-      - name: photos
-        label: Fotografías
-        type: image
+      - name: folder
+        label: Carpeta de imágenes
+        type: string
         required: true
-        description: Selecciona o sube varias fotografías para este álbum.
-        options:
-          multiple:
-            max: 100
-          unique: true
-          extensions: [jpg, jpeg, png, webp]
-          rename: safe
+        description: "Escribe el nombre de la carpeta ubicada dentro de public/uploads. Ejemplo: taller-rita-segato"
