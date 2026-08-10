@@ -1,0 +1,570 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Layout from '~/layouts/PageLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('post');
+
+  return posts
+    .filter((post) => !post.data.draft)
+    .map((post) => ({
+      params: {
+        slug: post.id,
+      },
+      props: {
+        post,
+      },
+    }));
+}
+
+interface Props {
+  post: CollectionEntry<'post'>;
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const {
+  title,
+  excerpt,
+  image,
+  category,
+  tags,
+  author,
+  publishDate,
+  updateDate,
+} = post.data;
+
+const metadata = {
+  title: `${title} | Divulgar Filosófica`,
+  description:
+    excerpt ??
+    `Reflexión publicada por Divulgar Filosófica: ${title}.`,
+};
+
+const formatDate = (date?: Date) => {
+  if (!date) return '';
+
+  return new Intl.DateTimeFormat('es-CL', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
+};
+---
+
+<Layout metadata={metadata}>
+  <main class="reflection-page">
+
+    <section class="reflection-hero">
+      <div class="reflection-container">
+
+        <a href="/reflexiones" class="reflection-back">
+          ← Volver a Reflexiones
+        </a>
+
+        <div class="reflection-hero__content">
+
+          <div class="reflection-meta">
+
+            {
+              category && (
+                <span class="reflection-category">
+                  {category}
+                </span>
+              )
+            }
+
+            {
+              publishDate && (
+                <time
+                  datetime={publishDate.toISOString()}
+                  class="reflection-date"
+                >
+                  {formatDate(publishDate)}
+                </time>
+              )
+            }
+
+          </div>
+
+          <h1 class="reflection-title">
+            {title}
+          </h1>
+
+          {
+            excerpt && (
+              <p class="reflection-lead">
+                {excerpt}
+              </p>
+            )
+          }
+
+          <div class="reflection-author-row">
+
+            {
+              author && (
+                <p class="reflection-author">
+                  Por <strong>{author}</strong>
+                </p>
+              )
+            }
+
+            {
+              updateDate && (
+                <p class="reflection-updated">
+                  Actualizado el {formatDate(updateDate)}
+                </p>
+              )
+            }
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    {
+      image && (
+        <section class="reflection-image-section">
+          <div class="reflection-container">
+            <div class="reflection-image-wrap">
+              <img
+                src={image}
+                alt={title}
+                class="reflection-image"
+              />
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    <section class="reflection-content-section">
+      <div class="reflection-reading">
+
+        <article class="reflection-prose">
+          <Content />
+        </article>
+
+        {
+          tags && tags.length > 0 && (
+            <div class="reflection-tags">
+
+              <p class="reflection-tags__label">
+                Etiquetas
+              </p>
+
+              <div class="reflection-tags__list">
+                {tags.map((tag) => (
+                  <span class="reflection-tag">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+            </div>
+          )
+        }
+
+      </div>
+    </section>
+
+    <section class="reflection-closing">
+      <div class="reflection-container reflection-closing__inner">
+
+        <p class="reflection-closing__eyebrow">
+          SEGUIR PENSANDO
+        </p>
+
+        <h2 class="reflection-closing__title">
+          ¿La filosofía te dejó pensando?
+        </h2>
+
+        <p class="reflection-closing__text">
+          Descubre nuestras próximas actividades o explora otros espacios de
+          reflexión filosófica.
+        </p>
+
+        <div class="reflection-closing__actions">
+
+          <a
+            href="/actividades"
+            class="reflection-button reflection-button--light"
+          >
+            Ver actividades →
+          </a>
+
+          <a
+            href="/reflexiones"
+            class="reflection-button reflection-button--outline"
+          >
+            Más reflexiones
+          </a>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+</Layout>
+
+<style>
+  .reflection-page {
+    font-family: 'Lato', sans-serif;
+    color: #214536;
+  }
+
+  .reflection-container {
+    width: min(100% - 3rem, 1180px);
+    margin-inline: auto;
+  }
+
+  .reflection-hero {
+    background:
+      radial-gradient(
+        circle at 12% 20%,
+        rgba(160, 91, 234, 0.14),
+        transparent 22rem
+      ),
+      radial-gradient(
+        circle at 88% 75%,
+        rgba(33, 69, 54, 0.1),
+        transparent 24rem
+      ),
+      #f8f5f0;
+
+    padding: 4rem 0 6rem;
+  }
+
+  .reflection-back {
+    display: inline-flex;
+    margin-bottom: 4rem;
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #79558c;
+    text-decoration: none;
+    transition:
+      color 180ms ease,
+      transform 180ms ease;
+  }
+
+  .reflection-back:hover {
+    color: #62406f;
+    transform: translateX(-3px);
+  }
+
+  .reflection-hero__content {
+    max-width: 900px;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .reflection-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem 1.2rem;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.8rem;
+  }
+
+  .reflection-category {
+    display: inline-flex;
+    border-radius: 999px;
+    background: #79558c;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: white;
+  }
+
+  .reflection-date {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #68736e;
+  }
+
+  .reflection-title {
+    margin: 0;
+    font-family: 'Satisfy', cursive;
+    font-size: clamp(2.8rem, 5vw, 4.8rem);
+    font-weight: 400;
+    line-height: 1.06;
+    color: #214536;
+  }
+
+  .reflection-lead {
+    max-width: 760px;
+    margin: 2rem auto 0;
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: #58645f;
+  }
+
+  .reflection-author-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.5rem;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+
+  .reflection-author,
+  .reflection-updated {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #68736e;
+  }
+
+  .reflection-author strong {
+    color: #214536;
+  }
+
+  .reflection-image-section {
+    background: #ffffff;
+  }
+
+  .reflection-image-wrap {
+    overflow: hidden;
+    border-radius: 2rem;
+    transform: translateY(-2rem);
+    box-shadow:
+      0 22px 60px rgba(33, 69, 54, 0.12);
+  }
+
+  .reflection-image {
+    display: block;
+    width: 100%;
+    max-height: 650px;
+    object-fit: cover;
+  }
+
+  .reflection-content-section {
+    padding: 5rem 0 7rem;
+    background: #ffffff;
+  }
+
+  .reflection-reading {
+    width: min(100% - 3rem, 760px);
+    margin-inline: auto;
+  }
+
+  .reflection-prose {
+    font-size: 1.08rem;
+    line-height: 1.9;
+    color: #3f4b46;
+  }
+
+  .reflection-prose :global(p) {
+    margin: 0 0 1.6rem;
+  }
+
+  .reflection-prose :global(h2) {
+    margin: 3.2rem 0 1.3rem;
+    font-family: 'Satisfy', cursive;
+    font-size: clamp(2rem, 4vw, 2.9rem);
+    font-weight: 400;
+    line-height: 1.15;
+    color: #214536;
+  }
+
+  .reflection-prose :global(h3) {
+    margin: 2.6rem 0 1rem;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #214536;
+  }
+
+  .reflection-prose :global(strong) {
+    color: #214536;
+  }
+
+  .reflection-prose :global(a) {
+    color: #79558c;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  .reflection-prose :global(blockquote) {
+    margin: 2.5rem 0;
+    padding: 0.5rem 0 0.5rem 1.8rem;
+    border-left: 3px solid #a05bea;
+    font-family: 'Satisfy', cursive;
+    font-size: 1.65rem;
+    line-height: 1.45;
+    color: #214536;
+  }
+
+  .reflection-prose :global(ul),
+  .reflection-prose :global(ol) {
+    margin: 1.5rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .reflection-prose :global(li) {
+    margin-bottom: 0.6rem;
+  }
+
+  .reflection-tags {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(33, 69, 54, 0.12);
+  }
+
+  .reflection-tags__label {
+    margin: 0 0 1rem;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #79558c;
+  }
+
+  .reflection-tags__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .reflection-tag {
+    display: inline-flex;
+    border-radius: 999px;
+    background: #eee6f1;
+    padding: 0.5rem 0.9rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #79558c;
+  }
+
+  .reflection-closing {
+    background:
+      radial-gradient(
+        circle at 90% 20%,
+        rgba(160, 91, 234, 0.23),
+        transparent 24rem
+      ),
+      #214536;
+  }
+
+  .reflection-closing__inner {
+    max-width: 850px;
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+    text-align: center;
+  }
+
+  .reflection-closing__eyebrow {
+    margin: 0 0 1.2rem;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  .reflection-closing__title {
+    margin: 0;
+    font-family: 'Satisfy', cursive;
+    font-size: clamp(2.5rem, 4vw, 3.8rem);
+    font-weight: 400;
+    line-height: 1.1;
+    color: white;
+  }
+
+  .reflection-closing__text {
+    max-width: 650px;
+    margin: 1.5rem auto 0;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .reflection-closing__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+
+  .reflection-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 0.85rem 1.5rem;
+    font-size: 0.88rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition:
+      transform 180ms ease,
+      background-color 180ms ease,
+      color 180ms ease;
+  }
+
+  .reflection-button:hover {
+    transform: translateY(-2px);
+  }
+
+  .reflection-button--light {
+    background: white;
+    color: #214536;
+  }
+
+  .reflection-button--outline {
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    color: white;
+  }
+
+  .reflection-button--outline:hover {
+    background: white;
+    color: #214536;
+  }
+
+  @media (max-width: 640px) {
+    .reflection-container {
+      width: min(100% - 2rem, 1180px);
+    }
+
+    .reflection-hero {
+      padding-top: 2.5rem;
+      padding-bottom: 4.5rem;
+    }
+
+    .reflection-back {
+      margin-bottom: 3rem;
+    }
+
+    .reflection-title {
+      font-size: clamp(2.5rem, 12vw, 3.6rem);
+    }
+
+    .reflection-image-wrap {
+      border-radius: 1.4rem;
+    }
+
+    .reflection-reading {
+      width: min(100% - 2rem, 760px);
+    }
+
+    .reflection-content-section {
+      padding-top: 3.5rem;
+      padding-bottom: 5rem;
+    }
+
+    .reflection-prose {
+      font-size: 1rem;
+      line-height: 1.85;
+    }
+
+    .reflection-closing__inner {
+      padding-top: 5rem;
+      padding-bottom: 5rem;
+    }
+  }
+</style>

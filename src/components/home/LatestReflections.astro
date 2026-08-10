@@ -1,31 +1,190 @@
 ---
-import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('post'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => {
+    const dateA = a.data.publishDate?.getTime() ?? 0;
+    const dateB = b.data.publishDate?.getTime() ?? 0;
+
+    return dateB - dateA;
+  })
+  .slice(0, 3);
+
+const getPostUrl = (id: string) => {
+  return `/reflexiones/${id}`;
+};
+
+const formatDate = (date?: Date) => {
+  if (!date) return '';
+
+  return new Intl.DateTimeFormat('es-CL', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
+};
 ---
 
-<section class="py-32 bg-white">
-  <div class="max-w-7xl mx-auto px-8">
-    <div class="mb-16">
-      <p class="uppercase tracking-[0.35em] text-xs text-[#8B8B8B] mb-6">
-        BITÁCORA
-      </p>
+<section
+  id="reflexiones"
+  class="bg-white py-20 sm:py-24 lg:py-28"
+>
+  <div class="mx-auto max-w-7xl px-6 lg:px-8">
 
-      <h2
-        class="text-[3.5rem] leading-[0.95] text-[#214536] mb-6"
-        style="font-family:'Satisfy', cursive;"
+    <!-- Encabezado -->
+    <div class="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+
+      <div class="max-w-2xl">
+
+        <p
+          class="mb-5 text-xs font-bold uppercase tracking-[0.35em] text-[#79558c]"
+        >
+          Reflexiones
+        </p>
+
+        <h2
+          class="text-[#214536]"
+          style="
+            font-family: 'Satisfy', cursive;
+            font-size: clamp(2.8rem, 5vw, 4.4rem);
+            font-weight: 400;
+            line-height: 1;
+          "
+        >
+          Últimas reflexiones
+        </h2>
+
+        <p class="mt-6 max-w-2xl text-[17px] leading-8 text-stone-600">
+          Publicaciones, lecturas y novedades para seguir pensando en comunidad
+          desde la filosofía, los feminismos y los debates contemporáneos.
+        </p>
+
+      </div>
+
+      <a
+        href="/reflexiones"
+        class="inline-flex w-fit items-center justify-center rounded-full border border-[#79558c] px-7 py-3 text-sm font-bold text-[#79558c] transition duration-300 hover:bg-[#79558c] hover:text-white"
       >
-        Últimas reflexiones
-      </h2>
+        Ver todas las reflexiones →
+      </a>
 
-      <p class="text-[17px] leading-7 text-stone-600 max-w-2xl">
-        Publicaciones, lecturas y novedades para seguir pensando en comunidad.
-      </p>
     </div>
 
-    <div class="rounded-[40px] bg-[#F8F5F0] p-8 md:p-12">
-      <BlogLatestPosts
-        title=""
-        information=""
-      />
-    </div>
+    <!-- Reflexiones -->
+    {
+      posts.length > 0 ? (
+        <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+
+          {posts.map((post) => {
+            const postUrl = getPostUrl(post.id);
+
+            return (
+              <article class="group flex h-full flex-col overflow-hidden rounded-[2rem] bg-[#F8F5F0] transition duration-300 hover:-translate-y-1 hover:shadow-xl">
+
+                <!-- Imagen -->
+                <a
+                  href={postUrl}
+                  class="block overflow-hidden bg-[#e9e4dc]"
+                  aria-label={`Leer reflexión: ${post.data.title}`}
+                >
+                  {
+                    post.data.image ? (
+                      <div class="h-64 overflow-hidden">
+                        <img
+                          src={post.data.image}
+                          alt={post.data.title}
+                          loading="lazy"
+                          class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                        />
+                      </div>
+                    ) : (
+                      <div class="flex h-64 items-center justify-center bg-[#EEE6F1]">
+                        <span
+                          class="text-4xl text-[#79558c]"
+                          style="font-family:'Satisfy', cursive;"
+                        >
+                          Reflexión
+                        </span>
+                      </div>
+                    )
+                  }
+                </a>
+
+                <!-- Contenido -->
+                <div class="flex flex-1 flex-col p-7">
+
+                  <div class="mb-4 flex flex-wrap items-center gap-3">
+
+                    {
+                      post.data.category && (
+                        <span class="rounded-full bg-[#79558c] px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-white">
+                          {post.data.category}
+                        </span>
+                      )
+                    }
+
+                    {
+                      post.data.publishDate && (
+                        <span class="text-xs font-bold text-stone-500">
+                          {formatDate(post.data.publishDate)}
+                        </span>
+                      )
+                    }
+
+                  </div>
+
+                  <h3 class="text-[1.45rem] font-bold leading-snug text-[#214536]">
+                    <a
+                      href={postUrl}
+                      class="transition hover:text-[#79558c]"
+                    >
+                      {post.data.title}
+                    </a>
+                  </h3>
+
+                  {
+                    post.data.excerpt && (
+                      <p class="mt-4 line-clamp-3 leading-7 text-stone-600">
+                        {post.data.excerpt}
+                      </p>
+                    )
+                  }
+
+                  <div class="mt-auto pt-7">
+
+                    {
+                      post.data.author && (
+                        <p class="mb-4 text-sm text-stone-500">
+                          Por <strong class="text-[#214536]">{post.data.author}</strong>
+                        </p>
+                      )
+                    }
+
+                    <a
+                      href={postUrl}
+                      class="inline-flex items-center font-bold text-[#79558c] transition hover:text-[#62406f]"
+                    >
+                      Leer reflexión →
+                    </a>
+
+                  </div>
+
+                </div>
+
+              </article>
+            );
+          })}
+
+        </div>
+      ) : (
+        <div class="rounded-[2rem] bg-[#F8F5F0] p-12 text-center">
+          <p class="text-stone-600">
+            Próximamente publicaremos nuevas reflexiones.
+          </p>
+        </div>
+      )
+    }
+
   </div>
 </section>

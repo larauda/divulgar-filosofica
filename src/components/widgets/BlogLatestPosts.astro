@@ -1,63 +1,189 @@
 ---
-import { APP_BLOG } from 'astrowind:config';
+import { getCollection } from 'astro:content';
 
-import Grid from '~/components/blog/Grid.astro';
+const posts = (await getCollection('post'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => {
+    const dateA = a.data.publishDate?.getTime() ?? 0;
+    const dateB = b.data.publishDate?.getTime() ?? 0;
 
-import { getBlogPermalink } from '~/utils/permalinks';
-import { findLatestPosts } from '~/utils/blog';
-import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
-import type { Widget } from '~/types';
-import Button from '~/components/ui/Button.astro';
+    return dateB - dateA;
+  })
+  .slice(0, 3);
 
-export interface Props extends Widget {
-  title?: string;
-  linkText?: string;
-  linkUrl?: string | URL;
-  information?: string;
-  count?: number;
-}
+const getPostUrl = (id: string) => {
+  const slug = id.replace(/\.(md|mdx)$/, '');
+  return `/reflexiones/${slug}`;
+};
 
-const {
-  title = await Astro.slots.render('title'),
-  linkText = 'View all posts',
-  linkUrl = getBlogPermalink(),
-  information = await Astro.slots.render('information'),
-  count = 4,
+const formatDate = (date?: Date) => {
+  if (!date) return '';
 
-  id,
-  isDark = false,
-  classes = {},
-  bg = await Astro.slots.render('bg'),
-} = Astro.props;
-
-const posts = APP_BLOG.isEnabled ? await findLatestPosts({ count }) : [];
+  return new Intl.DateTimeFormat('es-CL', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
+};
 ---
 
-{
-  APP_BLOG.isEnabled ? (
-    <WidgetWrapper id={id} isDark={isDark} containerClass={classes?.container as string} bg={bg}>
-      <div class="flex flex-col lg:justify-between lg:flex-row mb-8">
-        {title && (
-          <div class="md:max-w-sm">
-            <h2
-              class="text-3xl font-bold tracking-tight sm:text-4xl sm:leading-none group font-heading mb-2"
-              set:html={title}
-            />
-            {APP_BLOG.list.isEnabled && linkText && linkUrl && (
-              <Button variant="link" href={linkUrl}>
-                {' '}
-                {linkText} »
-              </Button>
-            )}
-          </div>
-        )}
+<section
+  id="reflexiones"
+  class="bg-white py-20 sm:py-24 lg:py-28"
+>
+  <div class="mx-auto max-w-7xl px-6 lg:px-8">
 
-        {information && <p class="text-muted dark:text-slate-400 lg:text-sm lg:max-w-md" set:html={information} />}
+    <!-- Encabezado -->
+    <div class="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+
+      <div class="max-w-2xl">
+
+        <p
+          class="mb-5 text-xs font-bold uppercase tracking-[0.35em] text-[#79558c]"
+        >
+          Reflexiones
+        </p>
+
+        <h2
+          class="text-[#214536]"
+          style="
+            font-family: 'Satisfy', cursive;
+            font-size: clamp(2.8rem, 5vw, 4.4rem);
+            font-weight: 400;
+            line-height: 1;
+          "
+        >
+          Últimas reflexiones
+        </h2>
+
+        <p class="mt-6 max-w-2xl text-[17px] leading-8 text-stone-600">
+          Publicaciones, lecturas y novedades para seguir pensando en comunidad
+          desde la filosofía, los feminismos y los debates contemporáneos.
+        </p>
+
       </div>
 
-      <Grid posts={posts} />
-    </WidgetWrapper>
-  ) : (
-    <Fragment />
-  )
-}
+      <a
+        href="/reflexiones"
+        class="inline-flex w-fit items-center justify-center rounded-full border border-[#79558c] px-7 py-3 text-sm font-bold text-[#79558c] transition duration-300 hover:bg-[#79558c] hover:text-white"
+      >
+        Ver todas las reflexiones →
+      </a>
+
+    </div>
+
+    <!-- Publicaciones -->
+    {
+      posts.length > 0 ? (
+        <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+
+          {posts.map((post) => {
+            const postUrl = getPostUrl(post.id);
+
+            return (
+              <article class="reflection-card group flex h-full flex-col overflow-hidden rounded-[2rem] bg-[#F8F5F0] transition duration-300 hover:-translate-y-1 hover:shadow-xl">
+
+                <a
+                  href={postUrl}
+                  class="block overflow-hidden bg-[#e9e4dc]"
+                  aria-label={`Leer reflexión: ${post.data.title}`}
+                >
+                  {
+                    post.data.image ? (
+                      <div class="h-64 overflow-hidden">
+                        <img
+                          src={post.data.image}
+                          alt={post.data.title}
+                          loading="lazy"
+                          class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                        />
+                      </div>
+                    ) : (
+                      <div class="flex h-64 items-center justify-center bg-[#EEE6F1]">
+                        <span
+                          class="text-4xl text-[#79558c]"
+                          style="font-family:'Satisfy', cursive;"
+                        >
+                          Reflexión
+                        </span>
+                      </div>
+                    )
+                  }
+                </a>
+
+                <div class="flex flex-1 flex-col p-7">
+
+                  <div class="mb-4 flex flex-wrap items-center gap-3">
+
+                    {
+                      post.data.category && (
+                        <span class="rounded-full bg-[#79558c] px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-white">
+                          {post.data.category}
+                        </span>
+                      )
+                    }
+
+                    {
+                      post.data.publishDate && (
+                        <span class="text-xs font-bold text-stone-500">
+                          {formatDate(post.data.publishDate)}
+                        </span>
+                      )
+                    }
+
+                  </div>
+
+                  <h3 class="text-[1.45rem] font-bold leading-snug text-[#214536]">
+                    <a
+                      href={postUrl}
+                      class="transition hover:text-[#79558c]"
+                    >
+                      {post.data.title}
+                    </a>
+                  </h3>
+
+                  {
+                    post.data.excerpt && (
+                      <p class="mt-4 line-clamp-3 leading-7 text-stone-600">
+                        {post.data.excerpt}
+                      </p>
+                    )
+                  }
+
+                  <div class="mt-auto pt-7">
+
+                    {
+                      post.data.author && (
+                        <p class="mb-4 text-sm text-stone-500">
+                          Por <strong class="text-[#214536]">{post.data.author}</strong>
+                        </p>
+                      )
+                    }
+
+                    <a
+                      href={postUrl}
+                      class="inline-flex items-center font-bold text-[#79558c] transition hover:text-[#62406f]"
+                    >
+                      Leer reflexión →
+                    </a>
+
+                  </div>
+
+                </div>
+
+              </article>
+            );
+          })}
+
+        </div>
+      ) : (
+        <div class="rounded-[2rem] bg-[#F8F5F0] p-12 text-center">
+          <p class="text-stone-600">
+            Próximamente publicaremos nuevas reflexiones.
+          </p>
+        </div>
+      )
+    }
+
+  </div>
+</section>

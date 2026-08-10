@@ -4,73 +4,134 @@ import GruposIcon from '~/assets/images/icon-grupos.png';
 import DivulgacionIcon from '~/assets/images/icon-divulgacion.png';
 ---
 
-<!-- QUE HACEMOS -->
-<section class="py-32 bg-[#F8F5F0]">
-  <div class="max-w-7xl mx-auto px-8">
-    <div class="text-center mb-20">
-      <h2
-        class="text-[3.4rem] text-[#214536] mb-5"
-        style="font-family:'Satisfy', cursive;"
+<section
+  id="que-hacemos"
+  class="bg-white py-20 sm:py-24 lg:py-28"
+>
+  <div class="mx-auto max-w-7xl px-6 lg:px-8">
+
+    <!-- Encabezado -->
+    <div class="mx-auto mb-16 max-w-3xl text-center">
+
+      <p
+        class="mb-5 text-xs font-bold uppercase tracking-[0.35em] text-[#79558c]"
       >
         ¿Qué hacemos?
+      </p>
+
+      <h2
+        class="text-[#214536]"
+        style="
+          font-family: 'Satisfy', cursive;
+          font-size: clamp(3rem, 6vw, 5rem);
+          font-weight: 400;
+          line-height: 1;
+        "
+      >
+        Espacios para aprender, dialogar y pensar juntas.
       </h2>
 
-      <p class="text-[17px] leading-7 text-stone-600 max-w-2xl mx-auto">
-        Generamos espacios para pensar, dialogar y construir conocimiento colectivo desde una perspectiva crítica.
+      <p
+        class="mx-auto mt-7 max-w-2xl text-[17px] leading-8 text-stone-600"
+      >
+        Generamos instancias de aprendizaje y diálogo en torno al pensamiento
+        filosófico, con especial énfasis en la filosofía política y las teorías
+        feministas.
       </p>
+
     </div>
 
-    <div class="grid lg:grid-cols-3 gap-16">
+    <!-- Actividades -->
+    <div class="grid gap-16 lg:grid-cols-3">
+
       <!-- Talleres -->
       <div class="text-center">
+
         <img
           src={TalleresIcon.src}
           alt="Talleres"
-          class="mx-auto w-60 lg:w-64 mb-8 transition-all duration-300 hover:-translate-y-2 hover:rotate-2"
+          class="mx-auto mb-8 w-60 transition-all duration-300 hover:-translate-y-2 hover:rotate-2 lg:w-64"
         />
 
-        <h3 class="text-2xl font-semibold text-[#214536] mb-4">
+        <h3 class="mb-4 text-2xl font-semibold text-[#214536]">
           Talleres
         </h3>
 
-        <p class="text-base leading-6 text-stone-600 max-w-xs mx-auto">
-          Instancias formativas puntuales orientadas a introducir y profundizar en autoras, autores, corrientes filosóficas y problemáticas contemporáneas desde una perspectiva crítica. Cada encuentro combina exposición, reflexión y diálogo entre las participantes.
+        <p class="mx-auto max-w-xs text-base leading-7 text-stone-600">
+          Instancias formativas de carácter puntual, orientadas a la
+          introducción o profundización de autoras, autores, corrientes
+          filosóficas y problemáticas contemporáneas desde una perspectiva
+          crítica y feminista.
         </p>
+
+        <p class="mx-auto mt-4 max-w-xs text-base leading-7 text-stone-600">
+          Tienen una duración aproximada de dos horas y media, y combinan
+          exposición, reflexión y diálogo entre las participantes.
+        </p>
+
       </div>
 
-      <!-- Grupos -->
+      <!-- Grupos de estudio -->
       <div class="text-center">
+
         <img
           src={GruposIcon.src}
           alt="Grupos de estudio"
-          class="mx-auto w-60 lg:w-64 mb-8 transition-all duration-300 hover:-translate-y-2 hover:rotate-2"
+          class="mx-auto mb-8 w-60 transition-all duration-300 hover:-translate-y-2 hover:rotate-2 lg:w-64"
         />
 
-        <h3 class="text-2xl font-semibold text-[#214536] mb-4">
+        <h3 class="mb-4 text-2xl font-semibold text-[#214536]">
           Grupos de estudio
         </h3>
 
-        <p class="text-base leading-6 text-stone-600 max-w-xs mx-auto">
-          Espacios de formación continua desarrollados mediante encuentros periódicos de lectura, discusión y reflexión colectiva. Organizados en ciclos mensuales de cuatro sesiones, permiten profundizar sostenidamente en textos y autoras, favoreciendo la construcción colectiva del conocimiento.
+        <p class="mx-auto max-w-xs text-base leading-7 text-stone-600">
+          Espacios de formación continua desarrollados a través de encuentros
+          periódicos de lectura, discusión y reflexión colectiva.
         </p>
+
+        <p class="mx-auto mt-4 max-w-xs text-base leading-7 text-stone-600">
+          Organizados en ciclos mensuales de cuatro sesiones, permiten
+          profundizar de manera sostenida en textos, autores y autoras,
+          favoreciendo la construcción colectiva de conocimiento y el
+          intercambio de experiencias.
+        </p>
+
       </div>
 
-      <!-- Divulgación -->
+      <!-- Divulgación filosófica -->
       <div class="text-center">
+
         <img
           src={DivulgacionIcon.src}
-          alt="Divulgación Filosófica"
-          class="mx-auto w-60 lg:w-64 mb-8 transition-all duration-300 hover:-translate-y-2 hover:rotate-2"
+          alt="Divulgación filosófica"
+          class="mx-auto mb-8 w-60 transition-all duration-300 hover:-translate-y-2 hover:rotate-2 lg:w-64"
         />
 
-        <h3 class="text-2xl font-semibold text-[#214536] mb-4">
-          Divulgación Filosófica
+        <h3 class="mb-4 text-2xl font-semibold text-[#214536]">
+          Divulgación filosófica
         </h3>
 
-        <p class="text-base leading-6 text-stone-600 max-w-xs mx-auto">
-          Charlas, encuentros y actividades abiertas orientadas a acercar la filosofía a la comunidad y visibilizar el pensamiento y las contribuciones de filósofas en Chile.
+        <p class="mx-auto max-w-xs text-base leading-7 text-stone-600">
+          Charlas, encuentros y actividades abiertas orientadas a acercar la
+          filosofía a la comunidad en general, así como a visibilizar y
+          difundir el pensamiento y las contribuciones de filósofas en Chile.
         </p>
+
       </div>
+
     </div>
+
+    <!-- Botón -->
+    <div class="mt-16 text-center">
+
+      <a
+        href="/actividades"
+        class="inline-flex items-center justify-center rounded-full bg-[#A05BEA] px-7 py-3 text-sm font-bold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-[#8E4DE8] hover:shadow-lg"
+      >
+        Ver actividades →
+      </a>
+
+    </div>
+
   </div>
 </section>

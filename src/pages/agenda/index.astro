@@ -1,0 +1,1349 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Agenda Filosófica | Divulgar Filosófica',
+  description:
+    'Conoce los próximos encuentros, talleres, conversatorios y actividades filosóficas de Divulgar Filosófica.',
+};
+
+const agendaEntries = await getCollection('agenda');
+
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const normalizeDate = (date?: Date) => {
+  if (!date) return undefined;
+
+  const normalizedDate = new Date(date);
+  normalizedDate.setHours(0, 0, 0, 0);
+
+  return normalizedDate;
+};
+
+const getAgendaUrl = (id: string) => {
+  const slug = id.replace(/\.(md|mdx)$/, '');
+
+  return `/agenda/${slug}`;
+};
+
+const isFutureEvent = (date?: Date) => {
+  const eventDate = normalizeDate(date);
+
+  return eventDate ? eventDate >= today : false;
+};
+
+const isPastEvent = (date?: Date) => {
+  const eventDate = normalizeDate(date);
+
+  return eventDate ? eventDate < today : false;
+};
+
+const formatDateParts = (date?: Date) => {
+  if (!date) {
+    return {
+      day: '—',
+      month: 'SIN FECHA',
+      year: '',
+    };
+  }
+
+  return {
+    day: new Intl.DateTimeFormat('es-CL', {
+      day: '2-digit',
+    }).format(date),
+
+    month: new Intl.DateTimeFormat('es-CL', {
+      month: 'short',
+    })
+      .format(date)
+      .replace('.', '')
+      .toUpperCase(),
+
+    year: new Intl.DateTimeFormat('es-CL', {
+      year: 'numeric',
+    }).format(date),
+  };
+};
+
+const formatLongDate = (date?: Date) => {
+  if (!date) return '';
+
+  return new Intl.DateTimeFormat('es-CL', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
+};
+
+const formatTime = (time?: string) => {
+  if (!time) return '';
+
+  return time.toLowerCase().includes('hrs')
+    ? time
+    : `${time} hrs`;
+};
+
+const hasValidRegistrationUrl = (registrationUrl?: string) => {
+  return (
+    typeof registrationUrl === 'string' &&
+    registrationUrl.trim() !== '' &&
+    registrationUrl.trim() !== '#'
+  );
+};
+
+const getTypeClass = (type?: string) => {
+  const normalizedType = type?.toLowerCase().trim() ?? '';
+
+  if (normalizedType.includes('taller')) {
+    return 'agenda-type--taller';
+  }
+
+  if (
+    normalizedType.includes('charla') ||
+    normalizedType.includes('conversatorio')
+  ) {
+    return 'agenda-type--conversacion';
+  }
+
+  if (
+    normalizedType.includes('curso') ||
+    normalizedType.includes('seminario')
+  ) {
+    return 'agenda-type--formacion';
+  }
+
+  if (
+    normalizedType.includes('encuentro') ||
+    normalizedType.includes('jornada')
+  ) {
+    return 'agenda-type--encuentro';
+  }
+
+  return 'agenda-type--general';
+};
+
+const upcomingEvents = agendaEntries
+  .filter((entry) => isFutureEvent(entry.data.date))
+  .sort((a, b) => {
+    if (a.data.featured && !b.data.featured) return -1;
+    if (!a.data.featured && b.data.featured) return 1;
+
+    const dateA = a.data.date?.getTime() ?? Number.MAX_SAFE_INTEGER;
+    const dateB = b.data.date?.getTime() ?? Number.MAX_SAFE_INTEGER;
+
+    return dateA - dateB;
+  });
+
+const pastEvents = agendaEntries
+  .filter((entry) => isPastEvent(entry.data.date))
+  .sort((a, b) => {
+    const dateA = a.data.date?.getTime() ?? 0;
+    const dateB = b.data.date?.getTime() ?? 0;
+
+    return dateB - dateA;
+  });
+
+const eventsWithoutDate = agendaEntries.filter(
+  (entry) => !entry.data.date
+);
+---
+
+<Layout metadata={metadata}>
+  <main class="agenda-page">
+
+    <!-- Portada -->
+    <section class="agenda-hero">
+      <div class="agenda-decoration" aria-hidden="true">
+        <span class="agenda-decoration__circle agenda-decoration__circle--one"></span>
+        <span class="agenda-decoration__circle agenda-decoration__circle--two"></span>
+        <span class="agenda-decoration__dot"></span>
+      </div>
+
+      <div class="relative mx-auto max-w-7xl px-6 py-20 sm:py-24 lg:px-8 lg:py-28">
+        <div class="mx-auto max-w-4xl text-center">
+          <p class="agenda-label mb-5 uppercase tracking-[0.22em] text-[#79558c]">
+            Divulgar Filosófica
+          </p>
+
+          <h1 class="agenda-page-title leading-tight text-[#214536]">
+            Agenda Filosófica
+          </h1>
+
+          <p class="agenda-intro mx-auto mt-7 max-w-2xl leading-relaxed text-[#4f5f58]">
+            Un espacio para descubrir encuentros, talleres, conversaciones y
+            experiencias que nos invitan a pensar en comunidad.
+          </p>
+
+          <div class="mt-9 flex flex-wrap justify-center gap-3">
+            {
+              upcomingEvents.length > 0 && (
+                <a
+                  href="#proximos-eventos"
+                  class="agenda-navigation-button agenda-navigation-button--primary"
+                >
+                  Próximos eventos
+                </a>
+              )
+            }
+
+            {
+              pastEvents.length > 0 && (
+                <a
+                  href="#archivo-agenda"
+                  class="agenda-navigation-button"
+                >
+                  Revisar archivo
+                </a>
+              )
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {
+      agendaEntries.length > 0 ? (
+        <>
+          {
+            upcomingEvents.length > 0 ? (
+              <section
+                id="proximos-eventos"
+                class="agenda-section bg-[#f8f5f0] py-20 sm:py-24"
+              >
+                <div class="mx-auto max-w-7xl px-6 lg:px-8">
+                  <div class="agenda-section-header">
+                    <div>
+                      <p class="agenda-label mb-3 uppercase tracking-[0.22em] text-[#79558c]">
+                        Próximamente
+                      </p>
+
+                      <h2 class="agenda-section-title text-[#214536]">
+                        Encuentros para seguir pensando
+                      </h2>
+                    </div>
+
+                    <p class="max-w-xl leading-relaxed text-[#58645f]">
+                      Consulta las próximas fechas, modalidades y lugares de
+                      encuentro. Algunas actividades requieren inscripción
+                      previa.
+                    </p>
+                  </div>
+
+                  <div class="agenda-list">
+                    {
+                      upcomingEvents.map((entry) => {
+                        const eventUrl = getAgendaUrl(entry.id);
+                        const dateParts = formatDateParts(entry.data.date);
+
+                        const canRegister = hasValidRegistrationUrl(
+                          entry.data.registrationUrl
+                        );
+
+                        return (
+                          <article
+                            class:list={[
+                              'agenda-event',
+                              {
+                                'agenda-event--featured': entry.data.featured,
+                              },
+                            ]}
+                          >
+                            {
+                              entry.data.featured && (
+                                <div class="agenda-featured-ribbon">
+                                  <span aria-hidden="true">✦</span>
+                                  Recomendación de la semana
+                                </div>
+                              )
+                            }
+
+                            <div class="agenda-event__date">
+                              <span class="agenda-event__day">
+                                {dateParts.day}
+                              </span>
+
+                              <span class="agenda-event__month">
+                                {dateParts.month}
+                              </span>
+
+                              <span class="agenda-event__year">
+                                {dateParts.year}
+                              </span>
+                            </div>
+
+                            <div class="agenda-event__content">
+                              <div class="mb-4 flex flex-wrap items-center gap-3">
+                                {
+                                  entry.data.type && (
+                                    <span
+                                      class:list={[
+                                        'agenda-type',
+                                        getTypeClass(entry.data.type),
+                                      ]}
+                                    >
+                                      <span
+                                        class="agenda-type__indicator"
+                                        aria-hidden="true"
+                                      ></span>
+
+                                      {entry.data.type}
+                                    </span>
+                                  )
+                                }
+
+                                {
+                                  entry.data.status && (
+                                    <span class="agenda-status">
+                                      {entry.data.status}
+                                    </span>
+                                  )
+                                }
+                              </div>
+
+                              <h3 class="agenda-event__title">
+                                <a href={eventUrl}>
+                                  {entry.data.title}
+                                </a>
+                              </h3>
+
+                              {
+                                entry.data.excerpt && (
+                                  <p class="agenda-event__excerpt">
+                                    {entry.data.excerpt}
+                                  </p>
+                                )
+                              }
+
+                              <div class="agenda-event__information">
+                                {
+                                  entry.data.organizer && (
+                                    <p>
+                                      <strong>Organiza:</strong>{' '}
+                                      {entry.data.organizer}
+                                    </p>
+                                  )
+                                }
+
+                                {
+                                  entry.data.date && (
+                                    <p>
+                                      <strong>Fecha:</strong>{' '}
+                                      <span class="capitalize">
+                                        {formatLongDate(entry.data.date)}
+                                      </span>
+                                    </p>
+                                  )
+                                }
+
+                                {
+                                  entry.data.time && (
+                                    <p>
+                                      <strong>Horario:</strong>{' '}
+                                      {formatTime(entry.data.time)}
+                                    </p>
+                                  )
+                                }
+
+                                {
+                                  entry.data.modality && (
+                                    <p>
+                                      <strong>Modalidad:</strong>{' '}
+                                      {entry.data.modality}
+                                    </p>
+                                  )
+                                }
+
+                                {
+                                  entry.data.location && (
+                                    <p>
+                                      <strong>Lugar:</strong>{' '}
+                                      {entry.data.location}
+                                    </p>
+                                  )
+                                }
+                              </div>
+
+                              <div class="agenda-event__actions">
+                                {
+                                  canRegister && (
+                                    <a
+                                      href={entry.data.registrationUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      class="agenda-button agenda-button--primary"
+                                    >
+                                      Inscribirse
+                                    </a>
+                                  )
+                                }
+
+                                <a
+                                  href={eventUrl}
+                                  class="agenda-button agenda-button--secondary"
+                                >
+                                  Ver evento
+                                  <span aria-hidden="true">→</span>
+                                </a>
+                              </div>
+                            </div>
+
+                            {
+                              entry.data.image && (
+                                <a
+                                  href={eventUrl}
+                                  class="agenda-event__image"
+                                  aria-label={`Ver evento: ${entry.data.title}`}
+                                >
+                                  <img
+                                    src={entry.data.image}
+                                    alt={entry.data.title}
+                                    loading="lazy"
+                                  />
+                                </a>
+                              )
+                            }
+                          </article>
+                        );
+                      })
+                    }
+                  </div>
+                </div>
+              </section>
+            ) : (
+              <section class="agenda-section bg-[#f8f5f0] py-20 sm:py-24">
+                <div class="mx-auto max-w-4xl px-6 lg:px-8">
+                  <div class="agenda-empty">
+                    <p class="agenda-label mb-4 uppercase tracking-[0.22em] text-[#79558c]">
+                      Próximamente
+                    </p>
+
+                    <h2 class="agenda-empty__title text-[#214536]">
+                      Estamos preparando nuevos encuentros.
+                    </h2>
+
+                    <p class="agenda-intro mx-auto mt-5 max-w-xl text-[#58645f]">
+                      Muy pronto publicaremos nuevas actividades para seguir
+                      compartiendo preguntas, ideas y experiencias.
+                    </p>
+                  </div>
+                </div>
+              </section>
+            )
+          }
+
+          {
+            eventsWithoutDate.length > 0 && (
+              <section class="agenda-section bg-white py-20 sm:py-24">
+                <div class="mx-auto max-w-7xl px-6 lg:px-8">
+                  <div class="agenda-section-header">
+                    <div>
+                      <p class="agenda-label mb-3 uppercase tracking-[0.22em] text-[#79558c]">
+                        En preparación
+                      </p>
+
+                      <h2 class="agenda-section-title text-[#214536]">
+                        Próximas propuestas
+                      </h2>
+                    </div>
+
+                    <p class="max-w-xl leading-relaxed text-[#58645f]">
+                      Actividades que ya forman parte de nuestra programación y
+                      cuya fecha será anunciada próximamente.
+                    </p>
+                  </div>
+
+                  <div class="agenda-list">
+                    {
+                      eventsWithoutDate.map((entry) => {
+                        const eventUrl = getAgendaUrl(entry.id);
+                        const dateParts = formatDateParts();
+
+                        return (
+                          <article class="agenda-event agenda-event--undated">
+                            <div class="agenda-event__date">
+                              <span class="agenda-event__day">
+                                {dateParts.day}
+                              </span>
+
+                              <span class="agenda-event__month">
+                                {dateParts.month}
+                              </span>
+                            </div>
+
+                            <div class="agenda-event__content">
+                              <div class="mb-4 flex flex-wrap items-center gap-3">
+                                {
+                                  entry.data.type && (
+                                    <span
+                                      class:list={[
+                                        'agenda-type',
+                                        getTypeClass(entry.data.type),
+                                      ]}
+                                    >
+                                      <span
+                                        class="agenda-type__indicator"
+                                        aria-hidden="true"
+                                      ></span>
+
+                                      {entry.data.type}
+                                    </span>
+                                  )
+                                }
+
+                                <span class="agenda-status">
+                                  {entry.data.status || 'Próximamente'}
+                                </span>
+                              </div>
+
+                              <h3 class="agenda-event__title">
+                                <a href={eventUrl}>
+                                  {entry.data.title}
+                                </a>
+                              </h3>
+
+                              {
+                                entry.data.excerpt && (
+                                  <p class="agenda-event__excerpt">
+                                    {entry.data.excerpt}
+                                  </p>
+                                )
+                              }
+
+                              <div class="agenda-event__actions">
+                                <a
+                                  href={eventUrl}
+                                  class="agenda-button agenda-button--secondary"
+                                >
+                                  Conocer más
+                                  <span aria-hidden="true">→</span>
+                                </a>
+                              </div>
+                            </div>
+
+                            {
+                              entry.data.image && (
+                                <a
+                                  href={eventUrl}
+                                  class="agenda-event__image"
+                                  aria-label={`Ver evento: ${entry.data.title}`}
+                                >
+                                  <img
+                                    src={entry.data.image}
+                                    alt={entry.data.title}
+                                    loading="lazy"
+                                  />
+                                </a>
+                              )
+                            }
+                          </article>
+                        );
+                      })
+                    }
+                  </div>
+                </div>
+              </section>
+            )
+          }
+
+          {
+            pastEvents.length > 0 && (
+              <section
+                id="archivo-agenda"
+                class="agenda-section agenda-archive py-20 sm:py-24"
+              >
+                <div class="mx-auto max-w-7xl px-6 lg:px-8">
+                  <div class="agenda-section-header agenda-section-header--archive">
+                    <div>
+                      <p class="agenda-label mb-3 uppercase tracking-[0.22em] text-[#c8b1d5]">
+                        Archivo
+                      </p>
+
+                      <h2 class="agenda-section-title text-white">
+                        Encuentros realizados
+                      </h2>
+                    </div>
+
+                    <p class="max-w-xl leading-relaxed text-white/70">
+                      Revisa las actividades que han formado parte de nuestra
+                      agenda y vuelve a recorrer sus preguntas y contenidos.
+                    </p>
+                  </div>
+
+                  <div class="agenda-archive-grid">
+                    {
+                      pastEvents.map((entry) => {
+                        const eventUrl = getAgendaUrl(entry.id);
+                        const dateParts = formatDateParts(entry.data.date);
+
+                        return (
+                          <article class="agenda-archive-card">
+                            {
+                              entry.data.image && (
+                                <a
+                                  href={eventUrl}
+                                  class="agenda-archive-card__image"
+                                  aria-label={`Ver evento: ${entry.data.title}`}
+                                >
+                                  <img
+                                    src={entry.data.image}
+                                    alt={entry.data.title}
+                                    loading="lazy"
+                                  />
+
+                                  <div class="agenda-archive-card__date">
+                                    <strong>{dateParts.day}</strong>
+                                    <span>
+                                      {dateParts.month} {dateParts.year}
+                                    </span>
+                                  </div>
+                                </a>
+                              )
+                            }
+
+                            <div class="agenda-archive-card__content">
+                              {
+                                entry.data.type && (
+                                  <span
+                                    class:list={[
+                                      'agenda-type',
+                                      getTypeClass(entry.data.type),
+                                    ]}
+                                  >
+                                    <span
+                                      class="agenda-type__indicator"
+                                      aria-hidden="true"
+                                    ></span>
+
+                                    {entry.data.type}
+                                  </span>
+                                )
+                              }
+
+                              <h3>
+                                <a href={eventUrl}>
+                                  {entry.data.title}
+                                </a>
+                              </h3>
+
+                              {
+                                entry.data.excerpt && (
+                                  <p>{entry.data.excerpt}</p>
+                                )
+                              }
+
+                              <a
+                                href={eventUrl}
+                                class="agenda-archive-card__link"
+                              >
+                                Revisar actividad
+                                <span aria-hidden="true">→</span>
+                              </a>
+                            </div>
+                          </article>
+                        );
+                      })
+                    }
+                  </div>
+                </div>
+              </section>
+            )
+          }
+        </>
+      ) : (
+        <section class="agenda-section bg-[#f8f5f0] py-24">
+          <div class="mx-auto max-w-4xl px-6 lg:px-8">
+            <div class="agenda-empty">
+              <p class="agenda-label mb-4 uppercase tracking-[0.22em] text-[#79558c]">
+                Agenda Filosófica
+              </p>
+
+              <h2 class="agenda-empty__title text-[#214536]">
+                Muy pronto tendremos nuevas fechas.
+              </h2>
+
+              <p class="agenda-intro mx-auto mt-5 max-w-xl text-[#58645f]">
+                Estamos preparando encuentros, talleres y conversaciones para
+                seguir pensando en comunidad.
+              </p>
+
+              <a
+                href="/"
+                class="agenda-button agenda-button--primary mt-8"
+              >
+                Volver al inicio
+              </a>
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    <!-- Cierre -->
+    <section class="agenda-closing">
+      <div class="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-24">
+        <div class="mx-auto max-w-3xl text-center">
+          <p class="agenda-label mb-4 uppercase tracking-[0.22em] text-white/60">
+            Sigue explorando
+          </p>
+
+          <h2 class="agenda-closing__title text-white">
+            Cada encuentro abre una nueva pregunta.
+          </h2>
+
+          <p class="agenda-intro mx-auto mt-6 max-w-2xl text-white/75">
+            Conoce nuestras actividades y descubre otros espacios de diálogo,
+            formación y reflexión colectiva.
+          </p>
+
+          <a
+            href="/actividades"
+            class="agenda-closing__button"
+          >
+            Explorar actividades
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</Layout>
+
+<style>
+  :global(html) {
+    scroll-behavior: smooth;
+    scroll-padding-top: 110px;
+  }
+
+  .agenda-page,
+  .agenda-section,
+  .agenda-hero {
+    font-family: 'Lato', sans-serif;
+  }
+
+  .agenda-hero {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(33, 69, 54, 0.1);
+    background:
+      radial-gradient(
+        circle at 15% 20%,
+        rgba(160, 91, 234, 0.14),
+        transparent 24rem
+      ),
+      radial-gradient(
+        circle at 88% 75%,
+        rgba(33, 69, 54, 0.1),
+        transparent 25rem
+      ),
+      #f8f5f0;
+  }
+
+  .agenda-decoration__circle,
+  .agenda-decoration__dot {
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .agenda-decoration__circle {
+    border: 1px solid rgba(121, 85, 140, 0.2);
+    border-radius: 999px;
+  }
+
+  .agenda-decoration__circle--one {
+    top: 12%;
+    left: -5rem;
+    width: 14rem;
+    height: 14rem;
+  }
+
+  .agenda-decoration__circle--two {
+    right: 7%;
+    bottom: -5rem;
+    width: 12rem;
+    height: 12rem;
+  }
+
+  .agenda-decoration__dot {
+    top: 25%;
+    right: 18%;
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 999px;
+    background: #a05bea;
+    opacity: 0.6;
+  }
+
+  .agenda-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .agenda-page-title {
+    font-family: 'Satisfy', cursive;
+    font-size: clamp(4rem, 9vw, 7.5rem);
+    font-weight: 400;
+  }
+
+  .agenda-intro {
+    font-size: 1.1rem;
+  }
+
+  .agenda-section-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(33, 69, 54, 0.15);
+  }
+
+  .agenda-section-title,
+  .agenda-empty__title,
+  .agenda-closing__title {
+    font-family: 'Satisfy', cursive;
+    font-weight: 400;
+    line-height: 1.08;
+  }
+
+  .agenda-section-title {
+    font-size: clamp(2.7rem, 5vw, 4.4rem);
+  }
+
+  .agenda-empty__title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .agenda-closing__title {
+    font-size: clamp(2.8rem, 6vw, 5rem);
+  }
+
+  .agenda-navigation-button,
+  .agenda-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    transition:
+      color 180ms ease,
+      background-color 180ms ease,
+      border-color 180ms ease,
+      transform 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .agenda-navigation-button {
+    border: 1px solid rgba(121, 85, 140, 0.4);
+    padding: 0.8rem 1.35rem;
+    color: #79558c;
+  }
+
+  .agenda-navigation-button:hover {
+    border-color: #79558c;
+    background: #79558c;
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  .agenda-navigation-button--primary {
+    border-color: #79558c;
+    background: #79558c;
+    color: white;
+  }
+
+  .agenda-navigation-button--primary:hover {
+    background: #62406f;
+  }
+
+  .agenda-list {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .agenda-event {
+    position: relative;
+    display: grid;
+    grid-template-columns: 110px minmax(0, 1fr) 260px;
+    overflow: hidden;
+    border: 1px solid rgba(33, 69, 54, 0.1);
+    border-radius: 2rem;
+    background: white;
+    box-shadow: 0 10px 35px rgba(33, 69, 54, 0.05);
+    transition:
+      transform 220ms ease,
+      box-shadow 220ms ease,
+      border-color 220ms ease;
+  }
+
+  .agenda-event:hover {
+    border-color: rgba(121, 85, 140, 0.28);
+    box-shadow: 0 18px 55px rgba(33, 69, 54, 0.11);
+    transform: translateY(-3px);
+  }
+
+  .agenda-event--featured {
+    border-color: rgba(160, 91, 234, 0.35);
+    box-shadow: 0 18px 60px rgba(121, 85, 140, 0.12);
+  }
+
+  .agenda-featured-ribbon {
+    position: absolute;
+    top: 0;
+    right: 2rem;
+    z-index: 4;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    border-radius: 0 0 1rem 1rem;
+    background: #79558c;
+    padding: 0.65rem 1rem;
+    color: white;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .agenda-event__date {
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid rgba(33, 69, 54, 0.1);
+    background: #214536;
+    padding: 2rem 1rem;
+    color: white;
+    text-align: center;
+  }
+
+  .agenda-event__day {
+    font-family: 'Satisfy', cursive;
+    font-size: 3.8rem;
+    line-height: 0.9;
+  }
+
+  .agenda-event__month {
+    margin-top: 0.8rem;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+  }
+
+  .agenda-event__year {
+    margin-top: 0.25rem;
+    font-size: 0.7rem;
+    opacity: 0.65;
+  }
+
+  .agenda-event__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2.2rem;
+  }
+
+  .agenda-event__title {
+    font-size: clamp(1.55rem, 3vw, 2rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: #214536;
+  }
+
+  .agenda-event__title a {
+    transition: color 180ms ease;
+  }
+
+  .agenda-event__title a:hover {
+    color: #79558c;
+  }
+
+  .agenda-event__excerpt {
+    margin-top: 1rem;
+    max-width: 46rem;
+    color: #58645f;
+    line-height: 1.7;
+  }
+
+  .agenda-event__information {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem 1.5rem;
+    margin-top: 1.4rem;
+    color: #52605a;
+    font-size: 0.88rem;
+  }
+
+  .agenda-event__information strong {
+    color: #214536;
+  }
+
+  .agenda-event__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.7rem;
+  }
+
+  .agenda-button {
+    padding: 0.78rem 1.25rem;
+  }
+
+  .agenda-button--primary {
+    border: 1px solid #79558c;
+    background: #79558c;
+    color: white;
+  }
+
+  .agenda-button--primary:hover {
+    border-color: #62406f;
+    background: #62406f;
+    transform: translateY(-2px);
+  }
+
+  .agenda-button--secondary {
+    border: 1px solid rgba(121, 85, 140, 0.55);
+    color: #79558c;
+  }
+
+  .agenda-button--secondary:hover {
+    border-color: #79558c;
+    background: #79558c;
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  .agenda-event__image {
+    display: block;
+    min-height: 100%;
+    overflow: hidden;
+    background: #e8e1d8;
+  }
+
+  .agenda-event__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 500ms ease;
+  }
+
+  .agenda-event:hover .agenda-event__image img {
+    transform: scale(1.05);
+  }
+
+  .agenda-type,
+  .agenda-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    padding: 0.45rem 0.8rem;
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .agenda-type {
+    background: #f2edf4;
+    color: #654273;
+  }
+
+  .agenda-type__indicator {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    background: currentColor;
+  }
+
+  .agenda-type--taller {
+    color: #79558c;
+  }
+
+  .agenda-type--conversacion {
+    color: #a05273;
+  }
+
+  .agenda-type--formacion {
+    color: #315f78;
+  }
+
+  .agenda-type--encuentro {
+    color: #52714e;
+  }
+
+  .agenda-type--general {
+    color: #7b6543;
+  }
+
+  .agenda-status {
+    background: #edf1ee;
+    color: #52605a;
+  }
+
+  .agenda-event--undated .agenda-event__date {
+    background: #79558c;
+  }
+
+  .agenda-empty {
+    border-radius: 2rem;
+    background: white;
+    padding: 4rem 2rem;
+    text-align: center;
+    box-shadow: 0 10px 35px rgba(33, 69, 54, 0.05);
+  }
+
+  .agenda-archive {
+    background:
+      radial-gradient(
+        circle at 15% 20%,
+        rgba(160, 91, 234, 0.2),
+        transparent 24rem
+      ),
+      #214536;
+  }
+
+  .agenda-section-header--archive {
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .agenda-archive-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .agenda-archive-card {
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 1.75rem;
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+    backdrop-filter: blur(8px);
+    transition:
+      transform 220ms ease,
+      background-color 220ms ease;
+  }
+
+  .agenda-archive-card:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(-4px);
+  }
+
+  .agenda-archive-card__image {
+    position: relative;
+    display: block;
+    height: 230px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .agenda-archive-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.86;
+    transition:
+      transform 500ms ease,
+      opacity 300ms ease;
+  }
+
+  .agenda-archive-card:hover .agenda-archive-card__image img {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+
+  .agenda-archive-card__date {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    border-radius: 1rem;
+    background: rgba(33, 69, 54, 0.9);
+    padding: 0.75rem 1rem;
+    text-align: center;
+    backdrop-filter: blur(8px);
+  }
+
+  .agenda-archive-card__date strong {
+    font-family: 'Satisfy', cursive;
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .agenda-archive-card__date span {
+    margin-top: 0.2rem;
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .agenda-archive-card__content {
+    padding: 1.6rem;
+  }
+
+  .agenda-archive-card__content h3 {
+    margin-top: 1.1rem;
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .agenda-archive-card__content h3 a {
+    transition: color 180ms ease;
+  }
+
+  .agenda-archive-card__content h3 a:hover {
+    color: #d9b7f4;
+  }
+
+  .agenda-archive-card__content p {
+    margin-top: 0.9rem;
+    color: rgba(255, 255, 255, 0.68);
+    line-height: 1.65;
+  }
+
+  .agenda-archive-card__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.3rem;
+    color: #d9b7f4;
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  .agenda-closing {
+    background:
+      radial-gradient(
+        circle at 90% 20%,
+        rgba(160, 91, 234, 0.18),
+        transparent 22rem
+      ),
+      #79558c;
+  }
+
+  .agenda-closing__button {
+    display: inline-flex;
+    margin-top: 2rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: white;
+    padding: 0.85rem 1.5rem;
+    color: #214536;
+    font-size: 0.88rem;
+    font-weight: 700;
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .agenda-closing__button:hover {
+    box-shadow: 0 12px 35px rgba(33, 69, 54, 0.22);
+    transform: translateY(-2px);
+  }
+
+  #proximos-eventos,
+  #archivo-agenda {
+    scroll-margin-top: 110px;
+  }
+
+  @media (min-width: 768px) {
+    .agenda-section-header {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .agenda-event {
+      grid-template-columns: 95px minmax(0, 1fr);
+    }
+
+    .agenda-event__image {
+      display: none;
+    }
+
+    .agenda-archive-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 639px) {
+    .agenda-event {
+      grid-template-columns: 1fr;
+      border-radius: 1.6rem;
+    }
+
+    .agenda-featured-ribbon {
+      right: 1rem;
+      font-size: 0.61rem;
+    }
+
+    .agenda-event__date {
+      min-height: auto;
+      flex-direction: row;
+      justify-content: flex-start;
+      gap: 0.65rem;
+      border-right: 0;
+      padding: 1.25rem 1.5rem;
+      text-align: left;
+    }
+
+    .agenda-event__day {
+      font-size: 2.8rem;
+    }
+
+    .agenda-event__month {
+      margin-top: 0;
+    }
+
+    .agenda-event__year {
+      margin-top: 0;
+    }
+
+    .agenda-event__content {
+      padding: 1.5rem;
+    }
+
+    .agenda-event__information {
+      grid-template-columns: 1fr;
+    }
+
+    .agenda-event__actions {
+      flex-direction: column;
+    }
+
+    .agenda-button {
+      width: 100%;
+    }
+
+    .agenda-archive-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html) {
+      scroll-behavior: auto;
+    }
+
+    .agenda-event,
+    .agenda-event__image img,
+    .agenda-navigation-button,
+    .agenda-button,
+    .agenda-archive-card,
+    .agenda-archive-card__image img,
+    .agenda-closing__button {
+      transition: none;
+    }
+  }
+</style>

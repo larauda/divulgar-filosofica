@@ -1,0 +1,666 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Reflexiones | Divulgar Filosófica',
+  description:
+    'Publicaciones, lecturas y reflexiones de Divulgar Filosófica sobre filosofía, feminismos, política, cuidados, ecofeminismo y comunidad.',
+};
+
+const posts = (await getCollection('post'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => {
+    const dateA = a.data.publishDate?.getTime() ?? 0;
+    const dateB = b.data.publishDate?.getTime() ?? 0;
+
+    return dateB - dateA;
+  });
+
+const getPostUrl = (id: string) => {
+  return `/reflexiones/${id}`;
+};
+
+const formatDate = (date?: Date) => {
+  if (!date) return '';
+
+  return new Intl.DateTimeFormat('es-CL', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
+};
+
+const categories = Array.from(
+  new Set(
+    posts
+      .map((post) => post.data.category)
+      .filter((category): category is string => Boolean(category))
+  )
+);
+---
+
+<Layout metadata={metadata}>
+  <main class="reflections-page">
+
+    <!-- HERO -->
+    <section class="reflections-hero">
+      <div class="reflections-container reflections-hero__inner">
+
+        <p class="reflections-eyebrow">
+          REFLEXIONES
+        </p>
+
+        <h1 class="reflections-main-title">
+          Ideas, lecturas y preguntas para seguir pensando en comunidad.
+        </h1>
+
+        <p class="reflections-lead">
+          Un espacio editorial para compartir reflexiones sobre filosofía,
+          feminismos, política, cuidados, ecofeminismo y debates contemporáneos.
+        </p>
+
+      </div>
+    </section>
+
+    <!-- FILTROS VISUALES -->
+    {
+      categories.length > 0 && (
+        <section class="reflections-filters">
+          <div class="reflections-container">
+            <div class="filters-row">
+
+              <span class="filters-label">
+                Explorar por temática
+              </span>
+
+              <div class="filters-list">
+                {categories.map((category) => (
+                  <span class="filter-pill">
+                    {category}
+                  </span>
+                ))}
+              </div>
+
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    <!-- LISTADO -->
+    <section class="reflections-list-section">
+      <div class="reflections-container">
+
+        {
+          posts.length > 0 ? (
+            <div class="reflections-grid">
+
+              {posts.map((post, index) => {
+                const postUrl = getPostUrl(post.id);
+
+                return (
+                  <article
+                    class:list={[
+                      'reflection-card',
+                      index === 0 && 'reflection-card--featured',
+                    ]}
+                  >
+
+                    <a
+                      href={postUrl}
+                      class="reflection-card__image-link"
+                      aria-label={`Leer reflexión: ${post.data.title}`}
+                    >
+                      {
+                        post.data.image ? (
+                          <img
+                            src={post.data.image}
+                            alt={post.data.title}
+                            loading="lazy"
+                            class="reflection-card__image"
+                          />
+                        ) : (
+                          <div class="reflection-card__placeholder">
+                            <span>Reflexión</span>
+                          </div>
+                        )
+                      }
+                    </a>
+
+                    <div class="reflection-card__content">
+
+                      <div class="reflection-card__meta">
+
+                        {
+                          post.data.category && (
+                            <span class="reflection-card__category">
+                              {post.data.category}
+                            </span>
+                          )
+                        }
+
+                        {
+                          post.data.publishDate && (
+                            <time
+                              datetime={post.data.publishDate.toISOString()}
+                              class="reflection-card__date"
+                            >
+                              {formatDate(post.data.publishDate)}
+                            </time>
+                          )
+                        }
+
+                      </div>
+
+                      <h2 class="reflection-card__title">
+                        <a href={postUrl}>
+                          {post.data.title}
+                        </a>
+                      </h2>
+
+                      {
+                        post.data.excerpt && (
+                          <p class="reflection-card__excerpt">
+                            {post.data.excerpt}
+                          </p>
+                        )
+                      }
+
+                      <div class="reflection-card__footer">
+
+                        {
+                          post.data.author && (
+                            <span class="reflection-card__author">
+                              Por {post.data.author}
+                            </span>
+                          )
+                        }
+
+                        <a
+                          href={postUrl}
+                          class="reflection-card__link"
+                        >
+                          Leer reflexión
+                          <span aria-hidden="true">→</span>
+                        </a>
+
+                      </div>
+
+                    </div>
+
+                  </article>
+                );
+              })}
+
+            </div>
+          ) : (
+            <div class="reflections-empty">
+
+              <p class="reflections-eyebrow">
+                REFLEXIONES
+              </p>
+
+              <h2 class="reflections-empty__title">
+                Muy pronto compartiremos nuevas publicaciones.
+              </h2>
+
+              <p class="reflections-empty__text">
+                Estamos preparando contenidos para seguir pensando juntas.
+              </p>
+
+              <a
+                href="/"
+                class="reflections-button"
+              >
+                Volver al inicio
+              </a>
+
+            </div>
+          )
+        }
+
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="reflections-cta">
+      <div class="reflections-container reflections-cta__inner">
+
+        <p class="reflections-eyebrow reflections-eyebrow--light">
+          SEGUIR PENSANDO
+        </p>
+
+        <h2 class="reflections-cta__title">
+          La reflexión también continúa en el encuentro.
+        </h2>
+
+        <p class="reflections-cta__text">
+          Conoce nuestros talleres, grupos de estudio y actividades de
+          divulgación filosófica.
+        </p>
+
+        <a
+          href="/actividades"
+          class="reflections-button reflections-button--light"
+        >
+          Ver actividades →
+        </a>
+
+      </div>
+    </section>
+
+  </main>
+</Layout>
+
+<style>
+  .reflections-page {
+    font-family: 'Lato', sans-serif;
+    color: #214536;
+  }
+
+  .reflections-container {
+    width: min(100% - 3rem, 1280px);
+    margin-inline: auto;
+  }
+
+  /* HERO */
+
+  .reflections-hero {
+    background:
+      radial-gradient(
+        circle at 12% 18%,
+        rgba(160, 91, 234, 0.14),
+        transparent 24rem
+      ),
+      radial-gradient(
+        circle at 88% 75%,
+        rgba(33, 69, 54, 0.1),
+        transparent 24rem
+      ),
+      #f8f5f0;
+  }
+
+  .reflections-hero__inner {
+    max-width: 980px;
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+    text-align: center;
+  }
+
+  .reflections-eyebrow {
+    margin: 0 0 1.2rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #79558c;
+  }
+
+  .reflections-eyebrow--light {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .reflections-main-title {
+    margin: 0;
+    font-family: 'Satisfy', cursive;
+    font-size: clamp(2.8rem, 5vw, 4.8rem);
+    font-weight: 400;
+    line-height: 1.05;
+    color: #214536;
+  }
+
+  .reflections-lead {
+    max-width: 760px;
+    margin: 2rem auto 0;
+    font-size: 1.08rem;
+    line-height: 1.85;
+    color: #58645f;
+  }
+
+  /* FILTROS */
+
+  .reflections-filters {
+    border-top: 1px solid rgba(33, 69, 54, 0.08);
+    border-bottom: 1px solid rgba(33, 69, 54, 0.08);
+    background: white;
+  }
+
+  .filters-row {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    padding: 1.5rem 0;
+  }
+
+  .filters-label {
+    flex: 0 0 auto;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #214536;
+  }
+
+  .filters-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .filter-pill {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid rgba(121, 85, 140, 0.25);
+    border-radius: 999px;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #79558c;
+  }
+
+  /* LISTADO */
+
+  .reflections-list-section {
+    padding: 6rem 0;
+    background: #ffffff;
+  }
+
+  .reflections-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+  }
+
+  .reflection-card {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    overflow: hidden;
+    border: 1px solid rgba(33, 69, 54, 0.08);
+    border-radius: 2rem;
+    background: #f8f5f0;
+    transition:
+      transform 220ms ease,
+      box-shadow 220ms ease,
+      border-color 220ms ease;
+  }
+
+  .reflection-card:hover {
+    border-color: rgba(121, 85, 140, 0.24);
+    box-shadow: 0 20px 55px rgba(33, 69, 54, 0.1);
+    transform: translateY(-3px);
+  }
+
+  .reflection-card--featured {
+    grid-column: 1 / -1;
+    grid-template-columns: minmax(320px, 0.9fr) minmax(0, 1.1fr);
+  }
+
+  .reflection-card__image-link {
+    display: block;
+    min-height: 100%;
+    overflow: hidden;
+    background: #e9e4dc;
+  }
+
+  .reflection-card__image {
+    width: 100%;
+    height: 100%;
+    min-height: 260px;
+    object-fit: cover;
+    transition: transform 500ms ease;
+  }
+
+  .reflection-card:hover .reflection-card__image {
+    transform: scale(1.04);
+  }
+
+  .reflection-card--featured .reflection-card__image {
+    min-height: 380px;
+  }
+
+  .reflection-card__placeholder {
+    display: flex;
+    min-height: 260px;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    background: #eee6f1;
+    font-family: 'Satisfy', cursive;
+    font-size: 2.5rem;
+    color: #79558c;
+  }
+
+  .reflection-card__content {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+  }
+
+  .reflection-card--featured .reflection-card__content {
+    justify-content: center;
+    padding: 3rem;
+  }
+
+  .reflection-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+    align-items: center;
+  }
+
+  .reflection-card__category {
+    display: inline-flex;
+    border-radius: 999px;
+    background: #79558c;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: white;
+  }
+
+  .reflection-card__date {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #6e7873;
+  }
+
+  .reflection-card__title {
+    margin: 1.2rem 0 0;
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1.25;
+    color: #214536;
+  }
+
+  .reflection-card--featured .reflection-card__title {
+    font-family: 'Satisfy', cursive;
+    font-size: clamp(2.4rem, 4vw, 3.6rem);
+    font-weight: 400;
+    line-height: 1.08;
+  }
+
+  .reflection-card__title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 180ms ease;
+  }
+
+  .reflection-card__title a:hover {
+    color: #79558c;
+  }
+
+  .reflection-card__excerpt {
+    margin: 1rem 0 0;
+    line-height: 1.75;
+    color: #58645f;
+  }
+
+  .reflection-card__footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 1.8rem;
+  }
+
+  .reflection-card__author {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #52605a;
+  }
+
+  .reflection-card__link {
+    display: inline-flex;
+    gap: 0.45rem;
+    align-items: center;
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #79558c;
+    text-decoration: none;
+  }
+
+  /* VACÍO */
+
+  .reflections-empty {
+    border-radius: 2rem;
+    background: #f8f5f0;
+    padding: 4rem 2rem;
+    text-align: center;
+  }
+
+  .reflections-empty__title {
+    margin: 0;
+    font-family: 'Satisfy', cursive;
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    font-weight: 400;
+    color: #214536;
+  }
+
+  .reflections-empty__text {
+    margin: 1rem 0 0;
+    color: #58645f;
+  }
+
+  /* CTA */
+
+  .reflections-cta {
+    background:
+      radial-gradient(
+        circle at 90% 20%,
+        rgba(160, 91, 234, 0.22),
+        transparent 24rem
+      ),
+      #214536;
+  }
+
+  .reflections-cta__inner {
+    max-width: 850px;
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+    text-align: center;
+  }
+
+  .reflections-cta__title {
+    margin: 0;
+    font-family: 'Satisfy', cursive;
+    font-size: clamp(2.4rem, 4vw, 3.8rem);
+    font-weight: 400;
+    line-height: 1.1;
+    color: white;
+  }
+
+  .reflections-cta__text {
+    max-width: 650px;
+    margin: 1.5rem auto 0;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .reflections-button {
+    display: inline-flex;
+    margin-top: 2rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: #79558c;
+    padding: 0.85rem 1.5rem;
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: white;
+    text-decoration: none;
+  }
+
+  .reflections-button--light {
+    background: white;
+    color: #214536;
+  }
+
+  /* RESPONSIVE */
+
+  @media (max-width: 1023px) {
+    .reflections-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .reflection-card--featured {
+      grid-column: auto;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .filters-row {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .reflection-card,
+    .reflection-card--featured {
+      grid-template-columns: 1fr;
+    }
+
+    .reflection-card__image,
+    .reflection-card--featured .reflection-card__image {
+      min-height: 260px;
+      max-height: 360px;
+    }
+
+    .reflection-card--featured .reflection-card__content {
+      padding: 2rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .reflections-container {
+      width: min(100% - 2rem, 1280px);
+    }
+
+    .reflections-hero__inner {
+      padding-top: 5rem;
+      padding-bottom: 5rem;
+    }
+
+    .reflections-list-section {
+      padding: 4.5rem 0;
+    }
+
+    .reflection-card__content {
+      padding: 1.5rem;
+    }
+
+    .reflection-card__footer {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .reflections-cta__inner {
+      padding-top: 5rem;
+      padding-bottom: 5rem;
+    }
+  }
+</style>

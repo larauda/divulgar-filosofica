@@ -2,71 +2,214 @@
 import { getCollection } from 'astro:content';
 import Layout from '~/layouts/PageLayout.astro';
 
-const albums = await getCollection('gallery');
+const albums = (await getCollection('gallery')).sort((a, b) => {
+  const dateA = a.data.date?.getTime() ?? 0;
+  const dateB = b.data.date?.getTime() ?? 0;
+
+  return dateB - dateA;
+});
 
 const metadata = {
-  title: 'Galería',
-  description: 'Registros fotográficos de las actividades de Divulgar Filosófica.',
+  title: 'Galería | Divulgar Filosófica',
+  description:
+    'Registros fotográficos de los talleres, encuentros y actividades de Divulgar Filosófica.',
 };
 
 const getSlug = (id: string) => id.replace(/\.(md|mdx)$/, '');
+
+const formatDate = (date?: Date) => {
+  if (!date) return '';
+
+  return new Intl.DateTimeFormat('es-CL', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
+};
 ---
 
 <Layout metadata={metadata}>
-  <section class="px-6 py-16 md:py-24">
-    <div class="mx-auto max-w-6xl">
-      <header class="mb-12 max-w-2xl">
-        <p class="mb-3 text-sm font-medium uppercase tracking-[0.2em]">
-          Registros
-        </p>
 
-        <h1 class="text-4xl font-semibold md:text-5xl">
-          Galería
-        </h1>
+  <main class="bg-[#F8F5F0]">
 
-        <p class="mt-5 text-lg leading-8">
-          Fotografías de nuestros talleres, encuentros y actividades.
-        </p>
-      </header>
+    <!-- ================= HERO ================= -->
 
-      {
-        albums.length > 0 ? (
-          <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {albums.map((album) => (
-              <article>
-                <a href={`/galeria/${getSlug(album.id)}`} class="group block">
-                  <div class="aspect-[4/3] overflow-hidden rounded-2xl bg-neutral-100">
-                    <img
-                      src={album.data.cover}
-                      alt={`Portada de ${album.data.title}`}
-                      loading="lazy"
-                      class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
-                    />
-                  </div>
+    <section class="relative overflow-hidden border-b border-[#214536]/10">
 
-                  <div class="pt-5">
-                    <h2 class="text-2xl font-medium">
-                      {album.data.title}
-                    </h2>
+      <!-- Decoración -->
+      <div
+        class="pointer-events-none absolute -left-32 top-10 h-80 w-80 rounded-full bg-[#A05BEA]/10 blur-3xl"
+      ></div>
 
-                    {album.data.description && (
-                      <p class="mt-3 leading-7">
-                        {album.data.description}
-                      </p>
-                    )}
+      <div
+        class="pointer-events-none absolute -right-32 bottom-0 h-80 w-80 rounded-full bg-[#214536]/10 blur-3xl"
+      ></div>
 
-                    <span class="mt-4 inline-block font-medium">
-                      Ver álbum →
-                    </span>
-                  </div>
-                </a>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <p>Aún no hay álbumes publicados.</p>
-        )
-      }
-    </div>
-  </section>
+      <div class="relative mx-auto max-w-7xl px-6 py-20 md:py-28 lg:px-8">
+
+        <div class="max-w-3xl">
+
+          <p
+            class="mb-6 text-xs font-bold uppercase tracking-[0.35em] text-[#79558c]"
+          >
+            Registros
+          </p>
+
+          <h1
+            class="text-[#214536]"
+            style="
+              font-family: 'Satisfy', cursive;
+              font-size: clamp(3.5rem, 7vw, 6rem);
+              font-weight: 400;
+              line-height: 0.95;
+            "
+          >
+            Galería
+          </h1>
+
+          <p
+            class="mt-7 max-w-2xl text-[17px] leading-8 text-stone-600 md:text-lg"
+          >
+            Una memoria visual de nuestros talleres, encuentros y espacios
+            de reflexión construidos en comunidad.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= ÁLBUMES ================= -->
+
+    <section class="bg-white py-20 md:py-24">
+
+      <div class="mx-auto max-w-7xl px-6 lg:px-8">
+
+        {
+          albums.length > 0 ? (
+
+            <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+
+              {albums.map((album) => {
+
+                const albumUrl = `/galeria/${getSlug(album.id)}`;
+
+                return (
+
+                  <article
+                    class="group flex h-full flex-col overflow-hidden rounded-[2rem] bg-[#F8F5F0] transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+                  >
+
+                    <!-- IMAGEN -->
+
+                    <a
+                      href={albumUrl}
+                      class="block overflow-hidden"
+                      aria-label={`Ver álbum ${album.data.title}`}
+                    >
+
+                      <div class="aspect-[4/3] overflow-hidden bg-stone-100">
+
+                        <img
+                          src={album.data.cover}
+                          alt={`Portada de ${album.data.title}`}
+                          loading="lazy"
+                          class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                        />
+
+                      </div>
+
+                    </a>
+
+
+                    <!-- INFORMACIÓN -->
+
+                    <div class="flex flex-1 flex-col p-7 md:p-8">
+
+                      {
+                        album.data.date && (
+                          <p
+                            class="mb-4 text-[11px] font-bold uppercase tracking-[0.18em] text-[#79558c]"
+                          >
+                            {formatDate(album.data.date)}
+                          </p>
+                        )
+                      }
+
+                      <h2
+                        class="text-[1.6rem] font-bold leading-tight text-[#214536]"
+                      >
+                        <a
+                          href={albumUrl}
+                          class="transition duration-200 hover:text-[#79558c]"
+                        >
+                          {album.data.title}
+                        </a>
+                      </h2>
+
+                      {
+                        album.data.description && (
+                          <p class="mt-4 leading-7 text-stone-600">
+                            {album.data.description}
+                          </p>
+                        )
+                      }
+
+
+                      <!-- BOTÓN -->
+
+                      <div class="mt-auto pt-7">
+
+                        <a
+                          href={albumUrl}
+                          class="inline-flex items-center gap-2 font-bold text-[#79558c] transition duration-200 group-hover:gap-3 hover:text-[#A05BEA]"
+                        >
+                          Ver álbum
+                          <span aria-hidden="true">→</span>
+                        </a>
+
+                      </div>
+
+                    </div>
+
+                  </article>
+
+                );
+              })}
+
+            </div>
+
+          ) : (
+
+            <!-- VACÍO -->
+
+            <div
+              class="rounded-[2rem] bg-[#F8F5F0] px-6 py-16 text-center md:py-20"
+            >
+
+              <p
+                class="text-3xl text-[#214536]"
+                style="font-family: 'Satisfy', cursive;"
+              >
+                Pronto compartiremos nuevos registros.
+              </p>
+
+              <p class="mx-auto mt-4 max-w-lg leading-7 text-stone-600">
+                Aquí encontrarás fotografías de talleres, encuentros y
+                actividades de Divulgar Filosófica.
+              </p>
+
+            </div>
+
+          )
+        }
+
+      </div>
+
+    </section>
+
+  </main>
+
 </Layout>

@@ -1,34 +1,35 @@
-import { getPermalink, getBlogPermalink, getAsset } from './utils/permalinks';
+import { getPermalink } from './utils/permalinks';
 
-  export const headerData = {
+export const headerData = {
   links: [
     {
       text: 'Inicio',
       href: getPermalink('/'),
     },
     {
-      text: 'Quién soy',
-      href: getPermalink('/quien-soy'),
+      text: 'Sobre Divulgar',
+      href: getPermalink('/sobre-divulgar'),
+    },
+    {
+      text: 'Temáticas',
+      href: getPermalink('/tematicas'),
     },
     {
       text: 'Actividades',
       href: getPermalink('/actividades'),
     },
     {
+      text: 'Agenda',
+      href: getPermalink('/agenda'),
+    },
+    {
+      text: 'Reflexiones',
+      href: getPermalink('/reflexiones'),
+    },
+    {
       text: 'Galería',
       href: getPermalink('/galeria'),
     },
-    {
-      text: 'Filósofas',
-      href: getPermalink('/filosofas'),
-    },
-    {
-      text: 'Noticias',
-      href: getPermalink('/blog'),
-    },
-    {
-      text: 'Contacto',
-      href: getPermalink('/contacto'),
-    },
+  
   ],
 };

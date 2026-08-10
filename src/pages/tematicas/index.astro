@@ -1,0 +1,559 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Temáticas | Divulgar Filosófica',
+  description:
+    'Conoce las principales temáticas abordadas por Divulgar Filosófica: filosofía, filosofía política, filosofía política feminista y teorías feministas.',
+};
+---
+
+<Layout metadata={metadata}>
+  <main class="topics-page">
+
+    <!-- ================= HERO ================= -->
+
+    <section class="topics-hero">
+      <div class="topics-container topics-hero__inner">
+
+        <p class="topics-eyebrow">
+          TEMÁTICAS
+        </p>
+
+        <h1 class="topics-main-title">
+          Ideas para comprender y transformar nuestro presente.
+        </h1>
+
+        <p class="topics-lead">
+          En Divulgar Filosófica abordamos distintas corrientes,
+          problemáticas y debates desde una perspectiva crítica y feminista,
+          integrando el pensamiento de filósofas junto a autores fundamentales
+          de la tradición filosófica.
+        </p>
+
+      </div>
+    </section>
+
+
+    <!-- ================= FILOSOFÍA ================= -->
+
+    <section class="topic topic--light">
+      <div class="topics-container topic-grid">
+
+        <div class="topic-number">
+          01
+        </div>
+
+        <div class="topic-heading">
+
+          <p class="topics-eyebrow">
+            FILOSOFÍA
+          </p>
+
+          <h2 class="topic-title">
+            Pensar las grandes preguntas.
+          </h2>
+
+        </div>
+
+        <div class="topic-copy">
+
+          <p>
+            Explora las principales corrientes, problemas y debates de la
+            filosofía.
+          </p>
+
+          <p>
+            Los talleres abordan cuestiones sobre el conocimiento, la ética,
+            la existencia y la sociedad, integrando de manera transversal el
+            pensamiento de filósofas junto a autores fundamentales de la
+            tradición filosófica.
+          </p>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ================= FILOSOFÍA POLÍTICA ================= -->
+
+    <section class="topic topic--green">
+      <div class="topics-container topic-grid">
+
+        <div class="topic-number topic-number--light">
+          02
+        </div>
+
+        <div class="topic-heading">
+
+          <p class="topics-eyebrow topics-eyebrow--light">
+            FILOSOFÍA POLÍTICA
+          </p>
+
+          <h2 class="topic-title topic-title--light">
+            Poder, justicia, democracia y ciudadanía.
+          </h2>
+
+        </div>
+
+        <div class="topic-copy topic-copy--light">
+
+          <p>
+            En Filosofía Política se abordan las principales problemáticas
+            vinculadas al poder, la justicia, la democracia, el Estado y la
+            ciudadanía desde una perspectiva crítica.
+          </p>
+
+          <p>
+            Los talleres dialogan con el pensamiento político clásico y
+            contemporáneo, integrando de manera transversal el pensamiento de
+            filósofas junto a autores fundamentales de la tradición
+            político-filosófica.
+          </p>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ================= FILOSOFÍA POLÍTICA FEMINISTA ================= -->
+
+    <section class="topic topic--purple">
+      <div class="topics-container topic-grid">
+
+        <div class="topic-number topic-number--light">
+          03
+        </div>
+
+        <div class="topic-heading">
+
+          <p class="topics-eyebrow topics-eyebrow--light">
+            FILOSOFÍA POLÍTICA FEMINISTA
+          </p>
+
+          <h2 class="topic-title topic-title--light">
+            Repensar la vida política desde perspectivas feministas.
+          </h2>
+
+        </div>
+
+        <div class="topic-copy topic-copy--light">
+
+          <p>
+            En Filosofía Política Feminista se analizan y revisan estas
+            problemáticas desde perspectivas feministas, considerando las
+            experiencias históricas, sociales y políticas de las mujeres.
+          </p>
+
+          <p>
+            Los talleres exploran cómo las propuestas de filósofas y teóricas
+            feministas amplían estos debates, incorporando las relaciones entre
+            poder, género, patriarcado, dominación y equidad para repensar las
+            formas tradicionales de comprender la vida sociopolítica y
+            colectiva.
+          </p>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ================= TEORÍAS FEMINISTAS ================= -->
+
+    <section class="topic topic--lavender">
+      <div class="topics-container topic-grid">
+
+        <div class="topic-number">
+          04
+        </div>
+
+        <div class="topic-heading">
+
+          <p class="topics-eyebrow">
+            TEORÍAS FEMINISTAS
+          </p>
+
+          <h2 class="topic-title">
+            Autorías, territorios y debates contemporáneos.
+          </h2>
+
+        </div>
+
+        <div class="topic-copy">
+
+          <p>
+            Un espacio dedicado al conocimiento de diversas autoras feministas
+            de distintos territorios y sus aportes al pensamiento contemporáneo.
+          </p>
+
+          <p>
+            Los talleres abordan sus principales propuestas, conceptos y
+            debates, considerando los contextos históricos, sociales y
+            culturales desde donde surgen sus reflexiones y contribuciones al
+            pensamiento feminista.
+          </p>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ================= CTA ================= -->
+
+    <section class="topics-cta">
+      <div class="topics-container topics-cta__inner">
+
+        <p class="topics-eyebrow topics-eyebrow--light">
+          PENSAR EN COMUNIDAD
+        </p>
+
+        <h2 class="topics-cta__title">
+          Estas preguntas también se trabajan colectivamente.
+        </h2>
+
+        <p class="topics-cta__text">
+          Conoce los talleres, grupos de estudio y actividades donde
+          desarrollamos estas temáticas.
+        </p>
+
+        <a
+          href="/actividades"
+          class="topics-button"
+        >
+          Ver actividades →
+        </a>
+
+      </div>
+    </section>
+
+  </main>
+</Layout>
+
+
+<style>
+
+  /* ================= GENERAL ================= */
+
+  .topics-page {
+    font-family: 'Lato', sans-serif;
+    color: #214536;
+  }
+
+  .topics-container {
+    width: min(100% - 3rem, 1280px);
+    margin-inline: auto;
+  }
+
+
+  /* ================= HERO ================= */
+
+  .topics-hero {
+    position: relative;
+    overflow: hidden;
+
+    background:
+      radial-gradient(
+        circle at 10% 15%,
+        rgba(160, 91, 234, 0.14),
+        transparent 22rem
+      ),
+      radial-gradient(
+        circle at 90% 80%,
+        rgba(33, 69, 54, 0.1),
+        transparent 24rem
+      ),
+      #f8f5f0;
+  }
+
+  .topics-hero__inner {
+    max-width: 980px;
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+    text-align: center;
+  }
+
+  .topics-eyebrow {
+    margin: 0 0 1.2rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    color: #79558c;
+  }
+
+  .topics-eyebrow--light {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .topics-main-title {
+    margin: 0;
+
+    font-family: 'Satisfy', cursive;
+    font-size: clamp(2.8rem, 5vw, 4.8rem);
+    font-weight: 400;
+    line-height: 1.05;
+
+    color: #214536;
+  }
+
+  .topics-lead {
+    max-width: 760px;
+    margin: 2rem auto 0;
+
+    font-size: 1.1rem;
+    line-height: 1.85;
+
+    color: #58645f;
+  }
+
+
+  /* ================= TEMÁTICAS ================= */
+
+  .topic {
+    padding: 6rem 0;
+  }
+
+  .topic--light {
+    background: #ffffff;
+  }
+
+  .topic--green {
+    background: #214536;
+  }
+
+  .topic--purple {
+    background: #79558c;
+  }
+
+  .topic--lavender {
+    background: #eee6f1;
+  }
+
+
+  /* ================= GRILLA ================= */
+
+  .topic-grid {
+    display: grid;
+
+    grid-template-columns:
+      90px
+      minmax(0, 0.9fr)
+      minmax(0, 1.2fr);
+
+    gap: 3rem;
+    align-items: start;
+  }
+
+
+  /* ================= NÚMEROS ================= */
+
+  .topic-number {
+    font-family: 'Satisfy', cursive;
+    font-size: 3rem;
+    line-height: 1;
+
+    color: #79558c;
+  }
+
+  .topic-number--light {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+
+  /* ================= TÍTULOS TEMÁTICAS ================= */
+
+  .topic-title {
+    margin: 0;
+    max-width: 540px;
+
+    font-family: 'Satisfy', cursive;
+
+    /* MÁS PEQUEÑOS */
+    font-size: clamp(1.8rem, 2.6vw, 2.6rem);
+
+    font-weight: 400;
+    line-height: 1.15;
+
+    color: #214536;
+  }
+
+  .topic-title--light {
+    color: #ffffff;
+  }
+
+
+  /* ================= TEXTOS ================= */
+
+  .topic-copy {
+    max-width: 640px;
+
+    font-size: 1.05rem;
+    line-height: 1.85;
+
+    color: #58645f;
+  }
+
+  .topic-copy p {
+    margin: 0;
+  }
+
+  .topic-copy p + p {
+    margin-top: 1.5rem;
+  }
+
+  .topic-copy--light {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+
+  /* ================= CTA FINAL ================= */
+
+  .topics-cta {
+    background:
+      radial-gradient(
+        circle at 90% 20%,
+        rgba(160, 91, 234, 0.25),
+        transparent 24rem
+      ),
+      #214536;
+  }
+
+  .topics-cta__inner {
+    max-width: 850px;
+
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+
+    text-align: center;
+  }
+
+  .topics-cta__title {
+    margin: 0;
+
+    font-family: 'Satisfy', cursive;
+    font-size: clamp(2.4rem, 4vw, 3.8rem);
+    font-weight: 400;
+    line-height: 1.1;
+
+    color: #ffffff;
+  }
+
+  .topics-cta__text {
+    max-width: 650px;
+    margin: 1.5rem auto 0;
+
+    font-size: 1.05rem;
+    line-height: 1.8;
+
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+
+  /* ================= BOTÓN ================= */
+
+  .topics-button {
+    display: inline-flex;
+
+    margin-top: 2rem;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 999px;
+
+    background: #ffffff;
+
+    padding: 0.85rem 1.6rem;
+
+    font-size: 0.9rem;
+    font-weight: 800;
+
+    color: #214536;
+    text-decoration: none;
+
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .topics-button:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+      0 12px 35px rgba(0, 0, 0, 0.15);
+  }
+
+
+  /* ================= TABLET ================= */
+
+  @media (max-width: 900px) {
+
+    .topic-grid {
+      grid-template-columns: 65px minmax(0, 1fr);
+      gap: 2rem;
+    }
+
+    .topic-copy {
+      grid-column: 2;
+    }
+
+  }
+
+
+  /* ================= MÓVIL ================= */
+
+  @media (max-width: 640px) {
+
+    .topics-container {
+      width: min(100% - 2rem, 1280px);
+    }
+
+    .topics-hero__inner {
+      padding-top: 5rem;
+      padding-bottom: 5rem;
+    }
+
+    .topics-main-title {
+      font-size: clamp(2.4rem, 11vw, 3.5rem);
+    }
+
+    .topic {
+      padding: 4.5rem 0;
+    }
+
+    .topic-grid {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+
+    .topic-number {
+      font-size: 2.4rem;
+    }
+
+    .topic-title {
+      font-size: clamp(1.7rem, 8vw, 2.3rem);
+    }
+
+    .topic-copy {
+      grid-column: auto;
+    }
+
+    .topics-lead {
+      font-size: 1rem;
+    }
+
+    .topics-cta__inner {
+      padding-top: 5rem;
+      padding-bottom: 5rem;
+    }
+
+    .topics-cta__title {
+      font-size: clamp(2.2rem, 10vw, 3rem);
+    }
+
+  }
+
+</style>

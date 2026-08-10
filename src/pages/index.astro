@@ -8,17 +8,139 @@ import Vision from '~/components/home/Vision.astro';
 import UpcomingActivities from '~/components/home/UpcomingActivities.astro';
 import LatestReflections from '~/components/home/LatestReflections.astro';
 import Footer from '~/components/home/Footer.astro';
+import Topics from '~/components/home/Topics.astro';
+
+/* =========================================================
+   FECHA ACTUAL
+========================================================= */
+
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+/* =========================================================
+   AGENDA FILOSÓFICA
+========================================================= */
+
+const agendaItems = (await getCollection('agenda'))
+  .filter((item) => {
+    if (!item.data.date) return true;
+
+    const itemDate = new Date(item.data.date);
+    itemDate.setHours(0, 0, 0, 0);
+
+    return itemDate >= today;
+  })
+  .sort((a, b) => {
+    const featuredA = a.data.featured ? 1 : 0;
+    const featuredB = b.data.featured ? 1 : 0;
+
+    if (featuredA !== featuredB) {
+      return featuredB - featuredA;
+    }
+
+    const dateA = a.data.date
+      ? new Date(a.data.date).getTime()
+      : Number.MAX_SAFE_INTEGER;
+
+    const dateB = b.data.date
+      ? new Date(b.data.date).getTime()
+      : Number.MAX_SAFE_INTEGER;
+
+    return dateA - dateB;
+  })
+  .slice(0, 4);
+
+const getAgendaSlug = (id: string) =>
+  id.replace(/\.(md|mdx)$/, '');
+
+const getAgendaDateParts = (date?: Date) => {
+  if (!date) {
+    return {
+      day: '—',
+      month: 'Por confirmar',
+      year: '',
+    };
+  }
+
+  return {
+    day: new Intl.DateTimeFormat('es-CL', {
+      day: '2-digit',
+    }).format(date),
+
+    month: new Intl.DateTimeFormat('es-CL', {
+      month: 'short',
+    })
+      .format(date)
+      .replace('.', '')
+      .toUpperCase(),
+
+    year: new Intl.DateTimeFormat('es-CL', {
+      year: 'numeric',
+    }).format(date),
+  };
+};
+
+const formatAgendaTime = (time?: string) => {
+  if (!time) return '';
+
+  const cleanTime = time.trim();
+  const lowerTime = cleanTime.toLowerCase();
+
+  if (
+    lowerTime.includes('hrs') ||
+    lowerTime.includes('horas') ||
+    lowerTime.includes('h.')
+  ) {
+    return cleanTime;
+  }
+
+  return `${cleanTime} hrs.`;
+};
+
+const getTypeClass = (type?: string) => {
+  const normalizedType = type
+    ?.normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+
+  if (!normalizedType) return 'general';
+  if (normalizedType.includes('conversatorio')) return 'conversatorio';
+  if (normalizedType.includes('taller')) return 'taller';
+  if (normalizedType.includes('seminario')) return 'seminario';
+  if (normalizedType.includes('cine')) return 'cine';
+  if (normalizedType.includes('charla')) return 'charla';
+  if (normalizedType.includes('cafe')) return 'cafe';
+  if (normalizedType.includes('encuentro')) return 'encuentro';
+  if (normalizedType.includes('curso')) return 'curso';
+
+  return 'general';
+};
+
+/* =========================================================
+   GALERÍA
+========================================================= */
 
 const galleryAlbums = (await getCollection('gallery'))
   .sort((a, b) => {
-    const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
-    const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+    const dateA = a.data.date
+      ? new Date(a.data.date).getTime()
+      : 0;
+
+    const dateB = b.data.date
+      ? new Date(b.data.date).getTime()
+      : 0;
 
     return dateB - dateA;
   })
   .slice(0, 3);
 
-const getGallerySlug = (id: string) => id.replace(/\.(md|mdx)$/, '');
+const getGallerySlug = (id: string) =>
+  id.replace(/\.(md|mdx)$/, '');
+
+/* =========================================================
+   METADATOS
+========================================================= */
 
 const metadata = {
   title: 'Divulgar Filosófica',
@@ -33,12 +155,291 @@ const metadata = {
   <WhatWeDo />
 
   <Vision />
+  
+  <Topics />
 
   <UpcomingActivities />
 
+  <!-- =====================================================
+       AGENDA FILOSÓFICA
+  ====================================================== -->
+
+  <section id="agenda" class="agenda-section">
+    <div class="agenda-container">
+
+      <div class="agenda-heading">
+
+        <div class="agenda-heading__content">
+
+          <p class="agenda-eyebrow">
+            EVENTOS RECOMENDADOS
+          </p>
+
+          <h2 class="agenda-title">
+            Agenda Filosófica
+          </h2>
+
+          <p class="agenda-intro">
+            La filosofía también ocurre fuera de nuestras actividades.
+          </p>
+
+          <p class="agenda-description">
+            Compartimos encuentros, seminarios, talleres y espacios
+            de reflexión organizados por universidades, colectivas,
+            instituciones y proyectos que creemos valiosos para la comunidad.
+          </p>
+
+        </div>
+
+        <aside class="agenda-heading__note">
+
+          <span
+            class="agenda-heading__note-symbol"
+            aria-hidden="true"
+          >
+            ✦
+          </span>
+
+          <div>
+            <p class="agenda-heading__note-title">
+              Una agenda colaborativa
+            </p>
+
+            <p class="agenda-heading__note-text">
+              Estas actividades son organizadas por otras instituciones
+              y recomendadas por Divulgar Filosófica.
+            </p>
+          </div>
+
+        </aside>
+
+      </div>
+
+      {
+        agendaItems.length > 0 ? (
+
+          <div class="agenda-list">
+
+            {
+              agendaItems.map((item, index) => {
+                const {
+                  title,
+                  type,
+                  organizer,
+                  date,
+                  time,
+                  modality,
+                  location,
+                  excerpt,
+                  featured,
+                } = item.data;
+
+                const agendaUrl =
+                  `/agenda/${getAgendaSlug(item.id)}`;
+
+                const dateParts =
+                  getAgendaDateParts(date);
+
+                const typeClass =
+                  getTypeClass(type);
+
+                return (
+                  <article
+                    class:list={[
+                      'agenda-card',
+                      featured && 'agenda-card--featured',
+                    ]}
+                  >
+
+                    {
+                      featured && (
+                        <div class="agenda-featured-label">
+                          <span aria-hidden="true">✦</span>
+                          Recomendación de la semana
+                        </div>
+                      )
+                    }
+
+                    <a
+                      href={agendaUrl}
+                      class="agenda-card__link"
+                      aria-label={`Ver actividad: ${title}`}
+                    >
+
+                      <div class="agenda-card__number">
+                        {String(index + 1).padStart(2, '0')}
+                      </div>
+
+                      <div class="agenda-date">
+
+                        <time
+                          datetime={date?.toISOString()}
+                          class="agenda-date__content"
+                        >
+                          <span class="agenda-date__day">
+                            {dateParts.day}
+                          </span>
+
+                          <span class="agenda-date__month">
+                            {dateParts.month}
+                          </span>
+
+                          {
+                            dateParts.year && (
+                              <span class="agenda-date__year">
+                                {dateParts.year}
+                              </span>
+                            )
+                          }
+                        </time>
+
+                        {
+                          time && (
+                            <span class="agenda-date__time">
+                              {formatAgendaTime(time)}
+                            </span>
+                          )
+                        }
+
+                      </div>
+
+                      <div class="agenda-card__content">
+
+                        <div class="agenda-card__tags">
+
+                          {
+                            type && (
+                              <span
+                                class:list={[
+                                  'agenda-type',
+                                  `agenda-type--${typeClass}`,
+                                ]}
+                              >
+                                <span
+                                  class="agenda-type__indicator"
+                                  aria-hidden="true"
+                                >
+                                </span>
+
+                                {type}
+                              </span>
+                            )
+                          }
+
+                          {
+                            modality && (
+                              <span class="agenda-modality">
+                                {modality}
+                              </span>
+                            )
+                          }
+
+                        </div>
+
+                        <h3 class="agenda-card__title">
+                          {title}
+                        </h3>
+
+                        {
+                          excerpt && (
+                            <p class="agenda-card__excerpt">
+                              {excerpt}
+                            </p>
+                          )
+                        }
+
+                        <div class="agenda-card__meta">
+
+                          {
+                            organizer && (
+                              <div class="agenda-card__meta-item">
+
+                                <span class="agenda-card__meta-label">
+                                  Organiza
+                                </span>
+
+                                <span>
+                                  {organizer}
+                                </span>
+
+                              </div>
+                            )
+                          }
+
+                          {
+                            location && (
+                              <div class="agenda-card__meta-item">
+
+                                <span class="agenda-card__meta-label">
+                                  Lugar
+                                </span>
+
+                                <span>
+                                  {location}
+                                </span>
+
+                              </div>
+                            )
+                          }
+
+                        </div>
+
+                      </div>
+
+                      <div class="agenda-card__action">
+
+                        <span class="agenda-card__action-text">
+                          Más información
+                        </span>
+
+                        <span
+                          class="agenda-card__arrow"
+                          aria-hidden="true"
+                        >
+                          →
+                        </span>
+
+                      </div>
+
+                    </a>
+
+                  </article>
+                );
+              })
+            }
+
+          </div>
+
+        ) : (
+
+          <div class="agenda-empty">
+
+            <p class="agenda-empty__label">
+              Agenda Filosófica
+            </p>
+
+            <h3 class="agenda-empty__title">
+              Pronto compartiremos nuevas actividades.
+            </h3>
+
+            <p class="agenda-empty__text">
+              Estamos reuniendo encuentros y eventos vinculados
+              a la filosofía, la educación y el pensamiento crítico.
+            </p>
+
+          </div>
+
+        )
+      }
+
+    </div>
+  </section>
+
   <LatestReflections />
 
-  <!-- ================= GALERÍA ================= -->
+  <!-- =====================================================
+       GALERÍA
+  ====================================================== -->
 
   <section class="bg-[#F8F5F0] py-24">
     <div class="mx-auto max-w-7xl px-8">
@@ -59,7 +460,8 @@ const metadata = {
           </h2>
 
           <p class="mt-6 text-[20px] leading-8 text-[#214536]/80">
-            Una memoria visual de talleres, encuentros, grupos de estudio y actividades de divulgación filosófica.
+            Una memoria visual de talleres, encuentros, grupos de estudio
+            y actividades de divulgación filosófica.
           </p>
 
         </div>
@@ -78,94 +480,98 @@ const metadata = {
 
           <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
 
-            {galleryAlbums.map((album) => (
+            {
+              galleryAlbums.map((album) => (
 
-              <article>
+                <article>
 
-                <a
-                  href={`/galeria/${getGallerySlug(album.id)}`}
-                  class="group block"
-                >
+                  <a
+                    href={`/galeria/${getGallerySlug(album.id)}`}
+                    class="group block"
+                  >
 
-                  <div class="aspect-[4/3] overflow-hidden rounded-3xl bg-white shadow-sm">
+                    <div class="aspect-[4/3] overflow-hidden rounded-3xl bg-white shadow-sm">
 
-                    <img
-                      src={album.data.cover}
-                      alt={album.data.title}
-                      loading="lazy"
-                      class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                    />
+                      <img
+                        src={album.data.cover}
+                        alt={album.data.title}
+                        loading="lazy"
+                        class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                      />
 
-                  </div>
+                    </div>
 
-                  <div class="pt-5">
+                    <div class="pt-5">
 
-                    <h3 class="text-2xl font-semibold text-[#214536]">
-                      {album.data.title}
-                    </h3>
+                      <h3 class="text-2xl font-semibold text-[#214536]">
+                        {album.data.title}
+                      </h3>
 
-                    {album.data.description && (
+                      {
+                        album.data.description && (
+                          <p class="mt-3 line-clamp-2 leading-7 text-[#214536]/70">
+                            {album.data.description}
+                          </p>
+                        )
+                      }
 
-                      <p class="mt-3 line-clamp-2 leading-7 text-[#214536]/70">
-                        {album.data.description}
-                      </p>
+                      <span class="mt-5 inline-block font-medium text-[#A05BEA]">
+                        Ver álbum →
+                      </span>
 
-                    )}
+                    </div>
 
-                    <span class="mt-5 inline-block font-medium text-[#A05BEA]">
-                      Ver álbum →
-                    </span>
+                  </a>
 
-                  </div>
+                </article>
 
-                </a>
-
-              </article>
-
-            ))}
+              ))
+            }
 
           </div>
 
         ) : (
 
           <div class="rounded-3xl bg-white p-10 text-center">
-
             <p class="text-[#214536]/70">
               Aún no hay registros publicados.
             </p>
-
           </div>
 
         )
       }
 
     </div>
-
   </section>
 
-  <!-- ================= CTA ================= -->
+  <!-- =====================================================
+       CTA
+  ====================================================== -->
 
-  <section class="py-28 bg-[#214536] text-white">
-    <div class="max-w-4xl mx-auto px-8 text-center">
+  <section class="bg-[#214536] py-28 text-white">
+    <div class="mx-auto max-w-4xl px-8 text-center">
 
       <h2
-        class="text-[3.2rem] leading-[1] mb-8"
+        class="mb-8 text-[3.2rem] leading-[1]"
         style="font-family:'Satisfy', cursive;"
       >
         Conversemos
       </h2>
 
-      <p class="text-[24px] leading-9 text-white font-medium mb-6 max-w-3xl mx-auto">
-        ¿Te interesa realizar una charla, taller, grupo de estudio o mediación filosófica en tu comunidad, organización o espacio educativo?
+      <p class="mx-auto mb-6 max-w-3xl text-[24px] font-medium leading-9">
+        ¿Te interesa realizar una charla, taller, grupo de estudio
+        o mediación filosófica en tu comunidad, organización
+        o espacio educativo?
       </p>
 
-      <p class="text-[18px] leading-8 text-white/80 mb-10 max-w-2xl mx-auto">
-        Podemos desarrollar una propuesta adaptada a tus necesidades e intereses.
+      <p class="mx-auto mb-10 max-w-2xl text-[18px] leading-8 text-white/80">
+        Podemos desarrollar una propuesta adaptada a tus
+        necesidades e intereses.
       </p>
 
       <a
         href="mailto:divulgar.filosofica@gmail.com?subject=Consulta%20desde%20Divulgar%20Filosófica"
-        class="inline-flex bg-[#A05BEA] text-white px-7 py-3 rounded-full text-sm font-medium hover:bg-[#8E4DE8] transition duration-300"
+        class="inline-flex rounded-full bg-[#A05BEA] px-7 py-3 text-sm font-medium text-white transition duration-300 hover:bg-[#8E4DE8]"
       >
         Conversemos →
       </a>
@@ -176,3 +582,547 @@ const metadata = {
   <Footer />
 
 </Layout>
+
+<style>
+  /* =========================================================
+     AGENDA FILOSÓFICA
+  ========================================================== */
+
+  .agenda-section {
+    padding: 7rem 2rem;
+    overflow: hidden;
+    background:
+      radial-gradient(
+        circle at 90% 10%,
+        rgba(160, 91, 234, 0.1),
+        transparent 32rem
+      ),
+      #eee6f1;
+    font-family: 'Lato', sans-serif;
+    color: #214536;
+  }
+
+  .agenda-container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  /* Encabezado */
+
+  .agenda-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 4rem;
+    align-items: end;
+    margin-bottom: 4.5rem;
+  }
+
+  .agenda-heading__content {
+    max-width: 800px;
+  }
+
+  .agenda-eyebrow {
+    margin: 0 0 1rem;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #79558c;
+  }
+
+  .agenda-title {
+    margin: 0;
+    font-family: 'Satisfy', cursive;
+    font-size: clamp(3.5rem, 7vw, 6rem);
+    font-weight: 400;
+    line-height: 0.98;
+    color: #214536;
+  }
+
+  .agenda-intro {
+    max-width: 760px;
+    margin: 2rem 0 0;
+    font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+    font-weight: 700;
+    line-height: 1.45;
+    color: #214536;
+  }
+
+  .agenda-description {
+    max-width: 740px;
+    margin: 1rem 0 0;
+    font-size: 1.08rem;
+    line-height: 1.8;
+    color: rgba(33, 69, 54, 0.74);
+  }
+
+  .agenda-heading__note {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1.6rem;
+    border: 1px solid rgba(121, 85, 140, 0.15);
+    border-radius: 1.5rem;
+    background: rgba(255, 255, 255, 0.48);
+    box-shadow: 0 18px 45px rgba(71, 50, 81, 0.06);
+  }
+
+  .agenda-heading__note-symbol {
+    flex: 0 0 auto;
+    font-size: 1.1rem;
+    line-height: 1;
+    color: #a05bea;
+  }
+
+  .agenda-heading__note-title {
+    margin: 0 0 0.45rem;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #214536;
+  }
+
+  .agenda-heading__note-text {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: rgba(33, 69, 54, 0.7);
+  }
+
+  /* Listado */
+
+  .agenda-list {
+    border-top: 1px solid rgba(33, 69, 54, 0.18);
+  }
+
+  .agenda-card {
+    position: relative;
+    border-bottom: 1px solid rgba(33, 69, 54, 0.18);
+  }
+
+  .agenda-card--featured {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(121, 85, 140, 0.17);
+    border-radius: 2rem;
+    background: rgba(255, 255, 255, 0.46);
+    box-shadow: 0 24px 60px rgba(71, 50, 81, 0.07);
+  }
+
+  .agenda-featured-label {
+    display: inline-flex;
+    gap: 0.55rem;
+    align-items: center;
+    margin: 1.3rem 1.5rem 0;
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    background: #79558c;
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  .agenda-featured-label span {
+    color: #eee6f1;
+  }
+
+  .agenda-card__link {
+    display: grid;
+    grid-template-columns: 52px 150px minmax(0, 1fr) 160px;
+    gap: 2.2rem;
+    align-items: center;
+    padding: 2.6rem 1.5rem;
+    color: inherit;
+    text-decoration: none;
+    transition:
+      padding 220ms ease,
+      background-color 220ms ease;
+  }
+
+  .agenda-card:not(.agenda-card--featured) .agenda-card__link:hover {
+    padding-right: 1rem;
+    padding-left: 2rem;
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  .agenda-card--featured .agenda-card__link {
+    padding-top: 2rem;
+  }
+
+  .agenda-card--featured .agenda-card__link:hover {
+    background: rgba(255, 255, 255, 0.38);
+  }
+
+  .agenda-card__number {
+    align-self: flex-start;
+    padding-top: 0.3rem;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    color: #79558c;
+  }
+
+  /* Fecha editorial */
+
+  .agenda-date {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .agenda-date__content {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 0.65rem;
+    align-items: center;
+  }
+
+  .agenda-date__day {
+    grid-row: 1 / 3;
+    font-family: 'Satisfy', cursive;
+    font-size: clamp(3.6rem, 5vw, 5rem);
+    font-weight: 400;
+    line-height: 0.8;
+    color: #214536;
+  }
+
+  .agenda-date__month {
+    align-self: end;
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    color: #79558c;
+  }
+
+  .agenda-date__year {
+    align-self: start;
+    margin-top: 0.15rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: rgba(33, 69, 54, 0.58);
+  }
+
+  .agenda-date__time {
+    margin-top: 0.8rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: rgba(33, 69, 54, 0.67);
+  }
+
+  /* Contenido */
+
+  .agenda-card__content {
+    min-width: 0;
+  }
+
+  .agenda-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .agenda-type,
+  .agenda-modality {
+    display: inline-flex;
+    align-items: center;
+    min-height: 29px;
+    padding: 0.32rem 0.85rem;
+    border: 1px solid rgba(121, 85, 140, 0.18);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.47);
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: #79558c;
+  }
+
+  .agenda-type {
+    gap: 0.5rem;
+  }
+
+  .agenda-type__indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #a05bea;
+  }
+
+  .agenda-type--conversatorio .agenda-type__indicator {
+    border-radius: 50% 50% 50% 20%;
+    background: #a05bea;
+  }
+
+  .agenda-type--taller .agenda-type__indicator {
+    border-radius: 2px;
+    background: #d47f5e;
+    transform: rotate(45deg);
+  }
+
+  .agenda-type--seminario .agenda-type__indicator {
+    border: 2px solid #315f51;
+    background: transparent;
+  }
+
+  .agenda-type--cine .agenda-type__indicator {
+    width: 10px;
+    border-radius: 1px;
+    background: #4f5578;
+  }
+
+  .agenda-type--charla .agenda-type__indicator {
+    border-radius: 999px;
+    background: #cf6891;
+  }
+
+  .agenda-type--cafe .agenda-type__indicator {
+    width: 10px;
+    height: 6px;
+    border-radius: 0 0 6px 6px;
+    background: #9f714c;
+  }
+
+  .agenda-type--encuentro .agenda-type__indicator {
+    background: #427c78;
+    box-shadow: 5px 0 0 rgba(66, 124, 120, 0.4);
+  }
+
+  .agenda-type--curso .agenda-type__indicator {
+    border-radius: 1px;
+    background: #7276b4;
+  }
+
+  .agenda-modality {
+    border-color: rgba(33, 69, 54, 0.12);
+    color: rgba(33, 69, 54, 0.68);
+  }
+
+  .agenda-card__title {
+    margin: 0;
+    font-family: 'Satisfy', cursive;
+    font-size: clamp(2rem, 3vw, 3.1rem);
+    font-weight: 400;
+    line-height: 1.12;
+    color: #214536;
+  }
+
+  .agenda-card__excerpt {
+    display: -webkit-box;
+    overflow: hidden;
+    margin: 1rem 0 0;
+    font-size: 0.98rem;
+    line-height: 1.7;
+    color: rgba(33, 69, 54, 0.71);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .agenda-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2.5rem;
+    margin-top: 1.4rem;
+  }
+
+  .agenda-card__meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.28rem;
+    max-width: 240px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.45;
+    color: rgba(33, 69, 54, 0.8);
+  }
+
+  .agenda-card__meta-label {
+    font-size: 0.63rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #79558c;
+  }
+
+  /* Acción */
+
+  .agenda-card__action {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 0.86rem;
+    font-weight: 800;
+    color: #79558c;
+  }
+
+  .agenda-card__arrow {
+    display: inline-flex;
+    width: 48px;
+    height: 48px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #79558c;
+    font-size: 1.2rem;
+    color: white;
+    transition:
+      transform 220ms ease,
+      background-color 220ms ease;
+  }
+
+  .agenda-card__link:hover .agenda-card__arrow {
+    background: #a05bea;
+    transform: translateX(5px);
+  }
+
+  /* Estado vacío */
+
+  .agenda-empty {
+    padding: 4rem 2rem;
+    border: 1px solid rgba(121, 85, 140, 0.14);
+    border-radius: 2.5rem;
+    background: rgba(255, 255, 255, 0.48);
+    text-align: center;
+  }
+
+  .agenda-empty__label {
+    margin: 0;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #79558c;
+  }
+
+  .agenda-empty__title {
+    margin: 1rem 0 0;
+    font-family: 'Satisfy', cursive;
+    font-size: 2.8rem;
+    font-weight: 400;
+    line-height: 1.15;
+    color: #214536;
+  }
+
+  .agenda-empty__text {
+    max-width: 600px;
+    margin: 1.2rem auto 0;
+    line-height: 1.7;
+    color: rgba(33, 69, 54, 0.7);
+  }
+
+  /* =========================================================
+     TABLET
+  ========================================================== */
+
+  @media (max-width: 1023px) {
+    .agenda-heading {
+      grid-template-columns: 1fr;
+      gap: 2.2rem;
+    }
+
+    .agenda-heading__note {
+      max-width: 580px;
+    }
+
+    .agenda-card__link {
+      grid-template-columns: 42px 145px minmax(0, 1fr);
+    }
+
+    .agenda-card__action {
+      grid-column: 3;
+      justify-content: flex-start;
+    }
+  }
+
+  /* =========================================================
+     MÓVIL
+  ========================================================== */
+
+  @media (max-width: 767px) {
+    .agenda-section {
+      padding: 5rem 1.25rem;
+    }
+
+    .agenda-heading {
+      margin-bottom: 3rem;
+    }
+
+    .agenda-description {
+      font-size: 1rem;
+      line-height: 1.72;
+    }
+
+    .agenda-heading__note {
+      padding: 1.35rem;
+    }
+
+    .agenda-card--featured {
+      margin-right: -0.25rem;
+      margin-left: -0.25rem;
+      border-radius: 1.5rem;
+    }
+
+    .agenda-featured-label {
+      margin-right: 1rem;
+      margin-left: 1rem;
+      font-size: 0.59rem;
+      letter-spacing: 0.07em;
+    }
+
+    .agenda-card__link {
+      grid-template-columns: 30px minmax(0, 1fr);
+      gap: 1rem;
+      padding: 2rem 0.5rem;
+    }
+
+    .agenda-card--featured .agenda-card__link {
+      padding: 1.7rem 1rem 2rem;
+    }
+
+    .agenda-card:not(.agenda-card--featured) .agenda-card__link:hover {
+      padding-right: 0.25rem;
+      padding-left: 0.75rem;
+    }
+
+    .agenda-card__number {
+      align-self: flex-start;
+      padding-top: 0.2rem;
+    }
+
+    .agenda-date {
+      grid-column: 2;
+      margin-bottom: 0.5rem;
+    }
+
+    .agenda-date__day {
+      font-size: 4.2rem;
+    }
+
+    .agenda-card__content {
+      grid-column: 2;
+    }
+
+    .agenda-card__action {
+      grid-column: 2;
+      justify-content: flex-start;
+    }
+
+    .agenda-card__action-text {
+      display: none;
+    }
+
+    .agenda-card__meta {
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .agenda-card__meta-item {
+      max-width: 100%;
+    }
+  }
+</style>
