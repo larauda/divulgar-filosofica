@@ -1,0 +1,102 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Administración | Divulgar Filosófica',
+  description: 'Acceso al panel de administración de contenidos de Divulgar Filosófica.',
+};
+---
+
+<Layout metadata={metadata}>
+
+  <main class="relative flex min-h-[75vh] items-center overflow-hidden bg-[#F8F5F0] px-6 py-24">
+
+    <!-- Decoración -->
+    <div
+      class="pointer-events-none absolute -left-32 top-10 h-80 w-80 rounded-full bg-[#A05BEA]/10 blur-3xl"
+    ></div>
+
+    <div
+      class="pointer-events-none absolute -right-32 bottom-0 h-96 w-96 rounded-full bg-[#214536]/10 blur-3xl"
+    ></div>
+
+
+    <div class="relative mx-auto w-full max-w-2xl text-center">
+
+      <!-- Eyebrow -->
+      <p
+        class="mb-6 text-xs font-bold uppercase tracking-[0.35em] text-[#79558c]"
+      >
+        Administración
+      </p>
+
+
+      <!-- Título -->
+      <h1
+        class="text-[#214536]"
+        style="
+          font-family: 'Satisfy', cursive;
+          font-size: clamp(3.5rem, 7vw, 5.5rem);
+          font-weight: 400;
+          line-height: 1;
+        "
+      >
+        Panel de contenidos
+      </h1>
+
+
+      <!-- Texto -->
+      <p
+        class="mx-auto mt-7 max-w-xl text-[17px] leading-8 text-stone-600"
+      >
+        Desde aquí puedes acceder al panel de administración de
+        Divulgar Filosófica para crear, editar y publicar contenidos
+        del sitio.
+      </p>
+
+
+      <!-- Card -->
+      <div
+        class="mx-auto mt-10 max-w-lg rounded-[2rem] bg-white p-7 shadow-[0_20px_60px_rgba(33,69,54,0.08)] md:p-9"
+      >
+
+        <div
+          class="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-[#EEE6F1] text-2xl text-[#79558c]"
+        >
+          ✦
+        </div>
+
+        <h2 class="text-xl font-bold text-[#214536]">
+          Administrar Divulgar Filosófica
+        </h2>
+
+        <p class="mt-3 text-sm leading-6 text-stone-500">
+          Gestiona Reflexiones, Actividades, Agenda y Galería
+          desde Pages CMS.
+        </p>
+
+
+        <!-- Botón Pages CMS -->
+        <a
+          href="https://app.pagescms.org"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="mt-7 inline-flex w-full items-center justify-center rounded-full bg-[#A05BEA] px-7 py-3.5 text-sm font-bold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-[#8E4DE8] hover:shadow-lg"
+        >
+          Abrir panel de administración →
+        </a>
+
+      </div>
+
+
+      <!-- Ayuda -->
+      <p class="mx-auto mt-7 max-w-md text-xs leading-5 text-stone-400">
+        El acceso al panel requiere iniciar sesión en Pages CMS
+        con una cuenta autorizada para administrar el repositorio.
+      </p>
+
+    </div>
+
+  </main>
+
+</Layout>
