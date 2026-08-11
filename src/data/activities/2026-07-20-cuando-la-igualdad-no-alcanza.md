@@ -13,9 +13,9 @@ excerpt: Un taller de filosofía política feminista que explora el pensamiento 
 ---
 **Cuando la igualdad no alcanza** fue un taller de filosofía política feminista dedicado al pensamiento de **Angela Davis**, abordando sus aportes sobre género, raza, clase y justicia social.
 
-Durante la actividad se reflexionó acerca de cómo la igualdad jurídica o formal no siempre se traduce en igualdad real, especialmente para quienes enfrentan múltiples formas de discriminación. A partir de las ideas de Davis, se discutieron conceptos como la interseccionalidad, el feminismo antirracista, el sistema penitenciario y las luchas colectivas por una sociedad más justa.
+Durante la actividad se reflexionó acerca de cómo la igualdad formal no siempre se traduce en igualdad real, especialmente para quienes enfrentan múltiples formas de discriminación. A partir de las ideas de Davis, se discutieron conceptos como la interseccionalidad, el feminismo antirracista.
 
-El encuentro buscó generar un espacio de diálogo crítico donde las y los participantes pudieron relacionar estas reflexiones con los desafíos sociales y políticos de la actualidad.
+El encuentro buscó generar un espacio de diálogo crítico donde las participantes pudieron relacionar estas reflexiones con los desafíos sociales y políticos de la actualidad.
 
 **Temáticas abordadas:**
 
