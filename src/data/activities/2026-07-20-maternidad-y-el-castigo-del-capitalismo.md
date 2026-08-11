@@ -8,12 +8,12 @@ location: Lincoyan
 status: Finalizada
 registrationUrl: "#"
 excerpt: Un taller de filosofía política feminista que aborda las reflexiones de
-  Silvia Federici sobre la maternidad, el trabajo de cuidados y las estructuras
-  del capitalismo contemporáneo.
+  Silvia Federici, Nancy Fraser e Iris Marion Young sobre la maternidad, los
+  cuidados y las estructuras del capitalismo contemporáneo.
 ---
-**Maternidad y el castigo del capitalismo** fue un taller de filosofía política feminista centrado en la lectura y discusión de las principales ideas de **Silvia Federici**, en diálogo con los aportes de **Nancy Fraser** e **Iris Marion Young**.
+**Maternidad y el castigo del capitalismo** fue un taller de filosofía política feminista centrado en la lectura y discusión con los aportes de **Silvia Federici**, **Nancy Fraser** e **Iris Marion Young**.
 
-A partir de estos textos, se reflexionó sobre el trabajo reproductivo y de cuidados, la construcción social de la maternidad y las formas en que el capitalismo ha condicionado históricamente la vida de las mujeres y las comunidades.
+A partir de sus contribuciones, se reflexionó sobre el trabajo reproductivo, los cuidados, la construcción social de la maternidad y las formas en que el capitalismo ha condicionado históricamente la vida de las mujeres y las comunidades.
 
 El encuentro promovió un espacio de conversación crítica, intercambio de experiencias y pensamiento colectivo, invitando a comprender la maternidad desde una perspectiva política, económica y social.
 
