@@ -300,3 +300,13 @@ Initially created by **Arthelokyo** and maintained by a community of [contributo
 ## License
 
 **AstroWind** is licensed under the MIT license — see the [LICENSE](./LICENSE.md) file for details.
+
+
+/* ========================================
+   ESCALA TIPOGRÁFICA GLOBAL
+   ======================================== */
+
+h2 {
+  font-size: clamp(2.25rem, 3.5vw, 3.4rem) !important;
+  line-height: 1.1 !important;
+}
