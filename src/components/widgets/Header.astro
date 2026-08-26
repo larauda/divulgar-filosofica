@@ -37,9 +37,11 @@ const isCurrentPage = (href?: string) => {
     { sticky: isSticky },
   ]}
 >
-  <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-4 md:px-8 md:py-5">
+  <div
+    class="mx-auto flex max-w-7xl items-center justify-between gap-5 px-5 py-4 md:px-8 md:py-5"
+  >
 
-    <!-- Logo -->
+    <!-- ================= LOGO ================= -->
 
     <a
       href={getHomePermalink()}
@@ -53,10 +55,11 @@ const isCurrentPage = (href?: string) => {
       />
     </a>
 
-    <!-- Navegación de escritorio -->
+
+    <!-- ================= DESKTOP ================= -->
 
     <nav
-      class="hidden items-center gap-7 text-sm font-bold text-[#214536] lg:flex"
+      class="hidden items-center gap-5 text-[13px] font-bold text-[#214536] xl:flex"
       aria-label="Navegación principal"
     >
       {
@@ -72,7 +75,7 @@ const isCurrentPage = (href?: string) => {
               data-section={sectionId}
               aria-current={isCurrentPage(href) ? 'page' : undefined}
               class:list={[
-                'nav-link group relative rounded-sm py-2 transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#A05BEA] focus-visible:ring-offset-4',
+                'nav-link group relative whitespace-nowrap rounded-sm py-2 transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#A05BEA] focus-visible:ring-offset-4',
                 {
                   'is-active text-[#A05BEA]': isCurrentPage(href),
                 },
@@ -90,21 +93,23 @@ const isCurrentPage = (href?: string) => {
       }
     </nav>
 
-    <!-- CTA de escritorio -->
+
+    <!-- ================= CTA DESKTOP ================= -->
 
     <a
-      href="/registro"
-      class="hidden shrink-0 rounded-full bg-[#A05BEA] px-6 py-2.5 text-sm font-bold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-[#8E4DE8] hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#A05BEA] focus-visible:ring-offset-4 lg:inline-flex"
+      href="mailto:divulgar.filosofica@gmail.com?subject=Consulta%20desde%20Divulgar%20Filosófica"
+      class="hidden shrink-0 rounded-full bg-[#A05BEA] px-6 py-2.5 text-[13px] font-bold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-[#8E4DE8] hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#A05BEA] focus-visible:ring-offset-4 xl:inline-flex"
     >
-      Inscripciones
+      Conversemos
     </a>
 
-    <!-- Botón menú móvil -->
+
+    <!-- ================= BOTÓN MÓVIL ================= -->
 
     <button
       id="mobile-menu-button"
       type="button"
-      class="relative z-50 inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#214536]/15 bg-white/60 text-[#214536] transition hover:border-[#A05BEA]/40 hover:text-[#A05BEA] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#A05BEA] focus-visible:ring-offset-4 lg:hidden"
+      class="relative z-50 inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#214536]/15 bg-white/60 text-[#214536] transition hover:border-[#A05BEA]/40 hover:text-[#A05BEA] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#A05BEA] focus-visible:ring-offset-4 xl:hidden"
       aria-label="Abrir menú"
       aria-controls="mobile-menu"
       aria-expanded="false"
@@ -122,16 +127,27 @@ const isCurrentPage = (href?: string) => {
 
   </div>
 
-  <!-- Navegación móvil -->
+
+  <!-- ================= MENÚ MÓVIL ================= -->
 
   <div
     id="mobile-menu"
-    class="mobile-menu lg:hidden"
+    class="mobile-menu xl:hidden"
     aria-hidden="true"
   >
-    <div class="mobile-menu__backdrop" data-close-menu></div>
+
+    <div
+      class="mobile-menu__backdrop"
+      data-close-menu
+    ></div>
 
     <div class="mobile-menu__panel">
+
+      <div class="mb-6">
+        <p class="text-[11px] font-bold uppercase tracking-[0.25em] text-[#79558c]">
+          Navegación
+        </p>
+      </div>
 
       <nav
         class="flex flex-col"
@@ -177,14 +193,17 @@ const isCurrentPage = (href?: string) => {
         }
       </nav>
 
+
+      <!-- CTA MOBILE -->
+
       <div class="mt-8 border-t border-[#214536]/10 pt-7">
 
         <a
-          href="/registro"
+          href="mailto:divulgar.filosofica@gmail.com?subject=Consulta%20desde%20Divulgar%20Filosófica"
           data-mobile-nav-link
           class="inline-flex w-full items-center justify-center rounded-full bg-[#A05BEA] px-6 py-3.5 text-sm font-bold text-white transition hover:bg-[#8E4DE8] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#A05BEA] focus-visible:ring-offset-4"
         >
-          Inscripciones
+          Conversemos →
         </a>
 
         <p class="mt-5 text-center text-xs leading-5 text-[#214536]/55">
@@ -195,7 +214,9 @@ const isCurrentPage = (href?: string) => {
 
     </div>
   </div>
+
 </header>
+
 
 <script is:inline>
   (() => {
@@ -227,8 +248,12 @@ const isCurrentPage = (href?: string) => {
         );
       });
 
+
+      /* ================= ABRIR / CERRAR ================= */
+
       const setMenuState = (open) => {
         mobileMenu.classList.toggle('is-open', open);
+
         mobileMenu.setAttribute(
           'aria-hidden',
           open ? 'false' : 'true'
@@ -250,10 +275,14 @@ const isCurrentPage = (href?: string) => {
         );
       };
 
+
       menuButton.addEventListener('click', () => {
-        const isOpen = mobileMenu.classList.contains('is-open');
+        const isOpen =
+          mobileMenu.classList.contains('is-open');
+
         setMenuState(!isOpen);
       });
+
 
       mobileMenu
         .querySelectorAll('[data-close-menu]')
@@ -263,11 +292,13 @@ const isCurrentPage = (href?: string) => {
           });
         });
 
+
       mobileLinks.forEach((link) => {
         link.addEventListener('click', () => {
           setMenuState(false);
         });
       });
+
 
       document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
@@ -276,11 +307,15 @@ const isCurrentPage = (href?: string) => {
         }
       });
 
+
       window.addEventListener('resize', () => {
-        if (window.innerWidth >= 1024) {
+        if (window.innerWidth >= 1280) {
           setMenuState(false);
         }
       });
+
+
+      /* ================= SECCIÓN ACTIVA ================= */
 
       const setActiveSection = (sectionId) => {
         navLinks.forEach((link) => {
@@ -290,21 +325,33 @@ const isCurrentPage = (href?: string) => {
             Boolean(sectionId) &&
             link.dataset.section === sectionId;
 
-          link.classList.toggle('is-active', isActive);
+          link.classList.toggle(
+            'is-active',
+            isActive
+          );
 
           if (isActive) {
-            link.setAttribute('aria-current', 'location');
+            link.setAttribute(
+              'aria-current',
+              'location'
+            );
           } else if (link.dataset.section) {
-            link.removeAttribute('aria-current');
+            link.removeAttribute(
+              'aria-current'
+            );
           }
         });
       };
 
+
       const sections = sectionLinks
         .map((link) => {
-          if (!(link instanceof HTMLAnchorElement)) return null;
+          if (!(link instanceof HTMLAnchorElement)) {
+            return null;
+          }
 
           const id = link.dataset.section;
+
           const section = id
             ? document.getElementById(id)
             : null;
@@ -313,36 +360,58 @@ const isCurrentPage = (href?: string) => {
         })
         .filter(Boolean);
 
+
       if (sections.length > 0) {
-        const observer = new IntersectionObserver(
-          (entries) => {
-            const visibleSections = entries
-              .filter((entry) => entry.isIntersecting)
-              .sort(
-                (a, b) =>
-                  Math.abs(a.boundingClientRect.top) -
-                  Math.abs(b.boundingClientRect.top)
-              );
+        const observer =
+          new IntersectionObserver(
+            (entries) => {
+              const visibleSections = entries
+                .filter(
+                  (entry) =>
+                    entry.isIntersecting
+                )
+                .sort(
+                  (a, b) =>
+                    Math.abs(
+                      a.boundingClientRect.top
+                    ) -
+                    Math.abs(
+                      b.boundingClientRect.top
+                    )
+                );
 
-            const currentSection = visibleSections[0];
+              const currentSection =
+                visibleSections[0];
 
-            if (
-              currentSection &&
-              currentSection.target instanceof HTMLElement
-            ) {
-              setActiveSection(currentSection.target.id);
+              if (
+                currentSection &&
+                currentSection.target instanceof HTMLElement
+              ) {
+                setActiveSection(
+                  currentSection.target.id
+                );
+              }
+            },
+            {
+              rootMargin:
+                '-28% 0px -58% 0px',
+
+              threshold: [
+                0,
+                0.1,
+                0.25,
+                0.5,
+              ],
             }
-          },
-          {
-            rootMargin: '-28% 0px -58% 0px',
-            threshold: [0, 0.1, 0.25, 0.5],
-          }
-        );
+          );
 
         sections.forEach((section) => {
           observer.observe(section);
         });
       }
+
+
+      /* ================= SCROLL HEADER ================= */
 
       const updateHeaderState = () => {
         header.classList.toggle(
@@ -360,10 +429,12 @@ const isCurrentPage = (href?: string) => {
       );
     };
 
+
     document.addEventListener(
       'astro:page-load',
       initializeHeader
     );
+
 
     if (document.readyState === 'loading') {
       document.addEventListener(
@@ -377,7 +448,11 @@ const isCurrentPage = (href?: string) => {
   })();
 </script>
 
+
 <style>
+
+  /* ================= GLOBAL ================= */
+
   :global(html) {
     scroll-behavior: smooth;
     scroll-padding-top: 110px;
@@ -387,6 +462,9 @@ const isCurrentPage = (href?: string) => {
   :global(html.menu-is-open body) {
     overflow: hidden;
   }
+
+
+  /* ================= HEADER ================= */
 
   .site-header {
     transition:
@@ -398,12 +476,12 @@ const isCurrentPage = (href?: string) => {
   .site-header.is-scrolled {
     border-color: rgba(33, 69, 54, 0.14);
     background: rgba(248, 245, 240, 0.97);
-    box-shadow: 0 12px 40px rgba(33, 69, 54, 0.08);
+    box-shadow:
+      0 12px 40px rgba(33, 69, 54, 0.08);
   }
 
-  /* =========================================================
-     NAVEGACIÓN DE ESCRITORIO
-  ========================================================== */
+
+  /* ================= DESKTOP ================= */
 
   .nav-link {
     color: #214536;
@@ -416,14 +494,20 @@ const isCurrentPage = (href?: string) => {
 
   .nav-link__indicator {
     position: absolute;
+
     right: 50%;
     bottom: -0.15rem;
     left: 50%;
+
     height: 2px;
+
     border-radius: 999px;
     background: #a05bea;
+
     opacity: 0;
+
     transform: translateY(3px);
+
     transition:
       right 220ms ease,
       left 220ms ease,
@@ -435,30 +519,39 @@ const isCurrentPage = (href?: string) => {
   .nav-link.is-active .nav-link__indicator {
     right: 0;
     left: 0;
+
     opacity: 1;
+
     transform: translateY(0);
   }
 
-  /* =========================================================
-     ICONO MÓVIL
-  ========================================================== */
+
+  /* ================= HAMBURGUESA ================= */
 
   .menu-icon {
     position: relative;
+
     display: flex;
+
     width: 20px;
     height: 16px;
+
     flex-direction: column;
     justify-content: space-between;
   }
 
   .menu-icon span {
     display: block;
+
     width: 100%;
     height: 2px;
+
     border-radius: 999px;
+
     background: currentColor;
+
     transform-origin: center;
+
     transition:
       transform 220ms ease,
       opacity 180ms ease,
@@ -467,7 +560,9 @@ const isCurrentPage = (href?: string) => {
 
   #mobile-menu-button[aria-expanded='true']
     .menu-icon span:nth-child(1) {
-    transform: translateY(7px) rotate(45deg);
+    transform:
+      translateY(7px)
+      rotate(45deg);
   }
 
   #mobile-menu-button[aria-expanded='true']
@@ -478,17 +573,20 @@ const isCurrentPage = (href?: string) => {
 
   #mobile-menu-button[aria-expanded='true']
     .menu-icon span:nth-child(3) {
-    transform: translateY(-7px) rotate(-45deg);
+    transform:
+      translateY(-7px)
+      rotate(-45deg);
   }
 
-  /* =========================================================
-     MENÚ MÓVIL
-  ========================================================== */
+
+  /* ================= MENÚ MÓVIL ================= */
 
   .mobile-menu {
     position: fixed;
     inset: 0;
+
     z-index: 40;
+
     visibility: hidden;
     pointer-events: none;
   }
@@ -498,27 +596,44 @@ const isCurrentPage = (href?: string) => {
     pointer-events: auto;
   }
 
+
   .mobile-menu__backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(21, 43, 34, 0.35);
+
+    background:
+      rgba(21, 43, 34, 0.35);
+
     opacity: 0;
+
     backdrop-filter: blur(4px);
-    transition: opacity 250ms ease;
+
+    transition:
+      opacity 250ms ease;
   }
 
-  .mobile-menu.is-open .mobile-menu__backdrop {
+  .mobile-menu.is-open
+    .mobile-menu__backdrop {
     opacity: 1;
   }
 
+
   .mobile-menu__panel {
     position: absolute;
+
     top: 0;
     right: 0;
+
     width: min(88vw, 430px);
     height: 100%;
+
     overflow-y: auto;
-    padding: 7.5rem 1.5rem 2rem;
+
+    padding:
+      7.5rem
+      1.5rem
+      2rem;
+
     background:
       radial-gradient(
         circle at 100% 0%,
@@ -526,36 +641,74 @@ const isCurrentPage = (href?: string) => {
         transparent 18rem
       ),
       #f8f5f0;
-    box-shadow: -24px 0 70px rgba(33, 69, 54, 0.14);
-    transform: translateX(105%);
-    transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+
+    box-shadow:
+      -24px 0 70px
+      rgba(33, 69, 54, 0.14);
+
+    transform:
+      translateX(105%);
+
+    transition:
+      transform
+      300ms
+      cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .mobile-menu.is-open .mobile-menu__panel {
-    transform: translateX(0);
+  .mobile-menu.is-open
+    .mobile-menu__panel {
+    transform:
+      translateX(0);
   }
+
+
+  /* ================= LINKS MOBILE ================= */
 
   .mobile-nav-link {
     display: grid;
-    grid-template-columns: 34px minmax(0, 1fr) auto;
+
+    grid-template-columns:
+      34px
+      minmax(0, 1fr)
+      auto;
+
     gap: 1rem;
+
     align-items: center;
-    padding: 1.15rem 0;
-    border-bottom: 1px solid rgba(33, 69, 54, 0.1);
+
+    padding: 1.05rem 0;
+
+    border-bottom:
+      1px solid
+      rgba(33, 69, 54, 0.1);
+
     color: #214536;
+
     opacity: 0;
+
     text-decoration: none;
-    transform: translateX(20px);
+
+    transform:
+      translateX(20px);
+
     transition:
       color 180ms ease,
       opacity 260ms ease,
       transform 260ms ease;
-    transition-delay: calc(var(--link-index) * 35ms);
+
+    transition-delay:
+      calc(
+        var(--link-index) *
+        35ms
+      );
   }
 
-  .mobile-menu.is-open .mobile-nav-link {
+  .mobile-menu.is-open
+    .mobile-nav-link {
     opacity: 1;
-    transform: translateX(0);
+
+    transform:
+      translateX(0);
   }
 
   .mobile-nav-link:hover,
@@ -563,41 +716,78 @@ const isCurrentPage = (href?: string) => {
     color: #a05bea;
   }
 
+
   .mobile-nav-link__number {
     font-size: 0.65rem;
     font-weight: 900;
+
     letter-spacing: 0.12em;
+
     color: #79558c;
   }
 
+
   .mobile-nav-link__text {
-    font-family: 'Satisfy', cursive;
-    font-size: clamp(1.8rem, 7vw, 2.35rem);
+    font-family:
+      'Satisfy',
+      cursive;
+
+    font-size:
+      clamp(
+        1.65rem,
+        6vw,
+        2.15rem
+      );
+
     line-height: 1.1;
   }
 
+
   .mobile-nav-link__arrow {
     display: inline-flex;
+
     width: 34px;
     height: 34px;
+
     align-items: center;
     justify-content: center;
+
     border-radius: 50%;
-    background: rgba(160, 91, 234, 0.1);
+
+    background:
+      rgba(
+        160,
+        91,
+        234,
+        0.1
+      );
+
     font-size: 1rem;
+
     transition:
       background-color 180ms ease,
       transform 180ms ease;
   }
 
-  .mobile-nav-link:hover .mobile-nav-link__arrow,
-  .mobile-nav-link.is-active .mobile-nav-link__arrow {
+  .mobile-nav-link:hover
+    .mobile-nav-link__arrow,
+  .mobile-nav-link.is-active
+    .mobile-nav-link__arrow {
     background: #a05bea;
+
     color: white;
-    transform: translateX(3px);
+
+    transform:
+      translateX(3px);
   }
 
-  @media (prefers-reduced-motion: reduce) {
+
+  /* ================= REDUCE MOTION ================= */
+
+  @media (
+    prefers-reduced-motion:
+    reduce
+  ) {
     :global(html) {
       scroll-behavior: auto;
     }
@@ -612,4 +802,5 @@ const isCurrentPage = (href?: string) => {
       transition: none;
     }
   }
+
 </style>

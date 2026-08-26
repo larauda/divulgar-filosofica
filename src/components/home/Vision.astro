@@ -1,54 +1,88 @@
-
 ---
 import HeroImage from '~/assets/images/SoyKarin_02.png';
 ---
 
-<!-- NUESTRA MIRADA -->
-<section class="py-32 bg-white">
-  <div class="max-w-7xl mx-auto px-8">
-    <div class="grid lg:grid-cols-2 gap-20 items-center">
+<section
+  id="nuestra-mirada"
+  class="bg-[#F8F5F0] py-20 sm:py-24 lg:py-28"
+>
+  <div
+    class="mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-2 lg:gap-20 lg:px-8"
+  >
 
-      <div class="relative">
-        <div class="absolute -top-8 -left-8 w-40 h-40 rounded-full bg-[#A05BEA]/20"></div>
-        <div class="absolute -bottom-6 -right-6 w-32 h-10 bg-[#E8C98F]/60 rotate-[-8deg]"></div>
+    <!-- Imagen -->
+    <div class="relative">
 
-        <img
-          src={HeroImage.src}
-          alt="Karin escribiendo"
-          class="relative w-full max-w-xl mx-auto rotate-[-2deg]"
-        />
-      </div>
+      <div
+        class="absolute -top-8 -left-8 h-40 w-40 rounded-full bg-[#A05BEA]/20"
+        aria-hidden="true"
+      ></div>
 
-      <div>
-        <p class="uppercase tracking-[0.35em] text-xs text-[#8B8B8B] mb-6">
-          MI MIRADA
-        </p>
+      <div
+        class="absolute -bottom-6 -right-6 h-10 w-32 rotate-[-8deg] bg-[#E8C98F]/60"
+        aria-hidden="true"
+      ></div>
 
-        <h2
-          class="text-[3.5rem] leading-[0.95] text-[#214536] mb-8"
-          style="font-family:'Satisfy', cursive;"
-        >
-          Creemos que la filosofía pertenece a todas las personas.
-        </h2>
-
-        <div class="space-y-4 text-[16px] leading-6 text-stone-600 max-w-lg">
-          <p>
-            Divulgar Filosófica busca acercar el pensamiento filosófico a la vida cotidiana mediante espacios abiertos de reflexión, aprendizaje y diálogo.
-          </p>
-
-          <p>
-            Nos interesa construir comunidad desde la filosofía, fomentando una mirada crítica comprometida con los desafíos contemporáneos.
-          </p>
-        </div>
-
-        <a
-          href="/quien-soy"
-          class="inline-flex items-center mt-8 text-[#A05BEA] font-bold hover:text-[#8E4DE8] transition"
-        >
-          Conocer más →
-        </a>
-      </div>
+      <img
+        src={HeroImage.src}
+        alt="Kareén Fredes, filósofa, docente e investigadora"
+        class="relative mx-auto w-full max-w-xl rotate-[-2deg]"
+      />
 
     </div>
+
+    <!-- Contenido -->
+    <div>
+
+      <p
+        class="mb-6 text-xs font-bold uppercase tracking-[0.35em] text-[#79558c]"
+      >
+        Nuestra mirada
+      </p>
+
+      <h2
+        class="mb-8 text-[#214536]"
+        style="
+          font-family: 'Satisfy', cursive;
+          font-size: clamp(3rem, 6vw, 5rem);
+          font-weight: 400;
+          line-height: 0.98;
+        "
+      >
+        La filosofía como una necesidad comunitaria.
+      </h2>
+
+      <div
+        class="max-w-lg space-y-5 text-[17px] leading-8 text-stone-600"
+      >
+        <p>
+          Divulgar Filosófica surge de la convicción de que la filosofía
+          constituye hoy una necesidad comunitaria y no un conocimiento
+          exclusivo reservado a los espacios tradicionales.
+        </p>
+
+        <p>
+          Desde esta perspectiva, buscamos contribuir a la democratización
+          del conocimiento mediante la creación de espacios seguros y
+          accesibles, dirigidos principalmente a mujeres y mujeres
+          transgénero.
+        </p>
+
+        <p>
+          Nuestro propósito es fortalecer su participación en la vida social,
+          política y cultural mediante espacios de aprendizaje, reflexión y
+          diálogo colectivo.
+        </p>
+      </div>
+
+      <a
+        href="/sobre-divulgar"
+        class="mt-8 inline-flex items-center font-bold text-[#A05BEA] transition hover:text-[#8E4DE8]"
+      >
+        Conocer más sobre Divulgar →
+      </a>
+
+    </div>
+
   </div>
 </section>
