@@ -6,6 +6,10 @@ media:
   rename: safe
 
 content:
+  # =========================================================
+  # REFLEXIONES
+  # =========================================================
+
   - name: reflexiones
     label: Reflexiones
     type: collection
@@ -73,6 +77,11 @@ content:
         options:
           format: markdown
           rename: safe
+
+
+  # =========================================================
+  # ACTIVIDADES
+  # =========================================================
 
   - name: actividades
     label: Actividades
@@ -170,6 +179,11 @@ content:
         options:
           format: markdown
           rename: safe
+
+
+  # =========================================================
+  # AGENDA FILOSÓFICA
+  # =========================================================
 
   - name: agenda
     label: Agenda Filosófica
@@ -284,6 +298,11 @@ content:
           format: markdown
           rename: safe
 
+
+  # =========================================================
+  # GALERÍA
+  # =========================================================
+
   - name: galeria
     label: Galería
     type: collection
@@ -323,8 +342,12 @@ content:
           extensions: [jpg, jpeg, png, webp]
           rename: safe
 
-      - name: folder
-        label: Carpeta de imágenes
-        type: string
+      - name: images
+        label: Fotografías del álbum
+        type: image
+        list: true
         required: true
-        description: "Escribe el nombre de la carpeta ubicada dentro de public/uploads. Ejemplo: taller-rita-segato"
+        description: Agrega aquí todas las fotografías que quieras incluir en este álbum.
+        options:
+          extensions: [jpg, jpeg, png, webp]
+          rename: safe
