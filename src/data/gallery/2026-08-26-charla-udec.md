@@ -10,5 +10,6 @@ images:
   - /uploads/img7643-1.jpg
   - /uploads/img7640.jpg
   - /uploads/img7634-1.jpg
-  - /uploads/img7634-2.jpg
+  - /uploads/udec.png
+  - /uploads/captura-de-pantalla-2026-08-31-a-las-124746.png
 ---
