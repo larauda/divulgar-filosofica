@@ -1,7 +1,7 @@
 ---
 title: The Climate Reality Project
 date: 2026-07-09
-description: Participación como organización aliada con L4C
+description: Participación como organización aliada con L4C.
 cover: /uploads/whatsapp-image-2026-07-10-at-183040-1.jpeg
 images:
   - /uploads/whatsapp-image-2026-07-10-at-183040-1-1.jpeg
