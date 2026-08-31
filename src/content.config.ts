@@ -81,7 +81,9 @@ const galleryCollection = defineCollection({
     date: z.coerce.date().optional(),
     description: z.string().optional(),
     cover: z.string(),
-    photos: z.array(z.string()).default([]),
+
+    // Fotografías cargadas desde Pages CMS
+    images: z.array(z.string()).default([]),
   }),
 });
 
