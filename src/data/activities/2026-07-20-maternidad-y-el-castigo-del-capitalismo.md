@@ -4,7 +4,7 @@ type: Taller
 image: /uploads/silvia-federicidcsfuegq.png
 date: 2026-05-20
 modality: Presencial
-location: Lincoyan
+location: Concepción
 status: Finalizada
 registrationUrl: "#"
 excerpt: Un taller de filosofía política feminista que aborda las reflexiones de
