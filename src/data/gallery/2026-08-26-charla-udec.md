@@ -1,7 +1,8 @@
 ---
-title: Charla Udec
-date: 2026-07-20
-description: Breve Descripción
+title: Feminismo en clave existencialista
+date: 2026-05-13
+description: Exposición en Universidad de Concepción, sobre Simone de Beauvoir y
+  su lectura del feminismo.
 cover: /uploads/img7643.jpg
 images:
   - /uploads/img7648.jpg
