@@ -4,7 +4,7 @@ type: Taller
 image: /uploads/del-voto-a-la-agencia-politica.jpg
 date: 2026-09-12
 modality: Presencial
-location: Concepción
+location: Lincoyán, Concepción
 status: Inscripciones abiertas
 excerpt: >-
   Un recorrido por la historia del sufragio femenino en Chile para comprender
