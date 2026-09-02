@@ -7,13 +7,13 @@ modality: Presencial
 location: Lincoyán, Concepción
 status: Inscripciones abiertas
 excerpt: >-
-  Un recorrido por la historia del sufragio femenino en Chile para comprender
-  cómo las mujeres conquistaron la ciudadanía política y qué significa hoy
-  ejercer nuestra agencia política.
+  Un recorrido por la historia del sufragio femenino en Chile para comprender la
+  conquista de la ciudadanía política de las mujeres y reflexionar sobre lo que
+  significa hoy ejercer nuestra agencia política.
 
 
-  Porque votar no fue el final del camino: fue el comienzo de una nueva forma de
-  participar y disputar el poder hasta nuestros tiempos.
+  Porque votar no fue el final del camino: fue el inicio de nuevas formas de
+  participación y de disputa por el poder que continúan hasta nuestros días.
 ---
 Inscripciones vía correo: [divulgar.filosofica@gmail.com](mailto:divulgar.filosofica@gmail.com)
 
