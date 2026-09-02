@@ -1,8 +1,8 @@
 ---
 title: Voces Ecofeministas
 date: 2026-03-07
-description: Exposición de organizaciones compuestas por mujeres en defensa de
-  los territorios, rumbo al 8M.
+description: Exposición de mujeres integrantes de organizaciones
+  medioambientales en defensa de los territorios, rumbo al 8M.
 cover: /uploads/captura-de-pantalla-2026-08-31-a-las-114404.png
 images:
   - /uploads/img0214.jpg
