@@ -15,4 +15,6 @@ Inscripciones vía correo: ++**[divulgar.filosofica@gmail.com](mailto:divulgar.f
 
 Inscripciones vía intagram: ++**[https://www.instagram.com/divulgar.filosofica](https://www.instagram.com/divulgar.filosofica)**++
 
+++**Sábado 24 de octubre, 11:00hrs, Linconyán, Concepción.**++
+
 ++**No requiere conocimientos previos, comenzamos desde cero.**++
