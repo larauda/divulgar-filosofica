@@ -1,8 +1,8 @@
 ---
 title: Del Voto a la Agencia Política
 type: Taller
-image: /uploads/del-voto-a-la-agencia-politica.png
-date: 2026-10-10
+image: /uploads/del-voto-a-la-agencia-politica-1.png
+date: 2026-10-24
 modality: Presencial
 location: Lincoyán, Concepción
 status: Inscripciones abiertas
