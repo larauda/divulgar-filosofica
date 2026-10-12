@@ -11,10 +11,10 @@ excerpt: Taller sobre el trabajo de Silvia Federici. Nos encontramos para
   y las implicancias que esta relación ha tenido históricamente en la vida de
   las mujeres.
 ---
-Inscripciones vía correo: ++**[divulgar.filosofica@gmail.com](mailto:divulgar.filosofica@gmail.com)**++
+Inscripciones vía correo: [divulgar.filosofica@gmail.com](mailto:divulgar.filosofica@gmail.com)
 
-Inscripciones vía intagram: ++**[https://www.instagram.com/divulgar.filosofica](https://www.instagram.com/divulgar.filosofica)**++
+Inscripciones vía intagram: [https://www.instagram.com/divulgar.filosofica](https://www.instagram.com/divulgar.filosofica)
 
-++**Sábado 24 de octubre, 11:00hrs, Linconyán, Concepción.**++
+Sábado 24 de octubre, 11:00hrs, Linconyán, Concepción.
 
-++**No requiere conocimientos previos, comenzamos desde cero.**++
+No requiere conocimientos previos, comenzamos desde cero.
