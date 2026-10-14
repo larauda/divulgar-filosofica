@@ -1,6 +1,6 @@
 ---
-title: "De la participación a la incidencia: por qué las voces de niñas y
-  adolescentes importan"
+title: '"De la representación a la incidencia: por qué las voces de niñas y
+  adolescentes importan"'
 type: Charla
 image: /uploads/whatsapp-image-2026-10-06-at-134048.jpeg
 date: 2026-10-14
