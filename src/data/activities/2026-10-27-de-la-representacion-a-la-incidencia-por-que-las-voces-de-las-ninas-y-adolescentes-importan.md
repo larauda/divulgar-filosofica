@@ -11,8 +11,8 @@ excerpt: Charla sobre participación e incidencia social dirigida a estudiantes
 ---
 Charla sobre participación e incidencia social dirigida a estudiantes de 7.º básico a 4.º medio.
 
-Un espacio de reflexión en torno al lugar que ocupan las voces de niñas y adolescentes en la sociedad, la importancia de que sus experiencias, perspectivas y opiniones sean escuchadas y reconocidas, y las posibilidades de participar activamente en la construcción de cambios sociales.
+Espacio de reflexión, desde una aproximación filosófica, sobre el lugar que ocupan las voces de niñas y adolescentes en la sociedad, la importancia de que sus experiencias, perspectivas y opiniones sean escuchadas y reconocidas, y el papel de la participación, la representación y la agencia política en el reconocimiento de su capacidad para intervenir en sus comunidades e incidir activamente en la construcción de cambios sociales.
 
-A través de una aproximación filosófica, se busca reflexionar sobre la participación, la representación y la agencia política, reconociendo a niñas y adolescentes como sujetas capaces de intervenir en sus comunidades, expresar sus propias perspectivas e incidir en los espacios que habitan.
+Propuesta dirigida a organizaciones, instituciones, establecimientos educacionales y comunidades interesadas en promover la participación de niñas y adolescentes, fortalecer sus espacios de expresión y reconocer la importancia de sus voces en la construcción de una sociedad más democrática.
 
 Cotizaciones y consultas: [divulgar.filosofica@gmail.com](mailto:divulgar.filosofica@gmail.com)
