@@ -11,7 +11,7 @@ status: Próximamente
 excerpt: "Encuentro internacional «Cuidar en un mundo interdependiente: ética,
   derecho y políticas de cuidado», que se realizará en la Universidad Alberto
   Hurtado los días 16, 17 y 18 de noviembre."
-featured: false
+featured: true
 ---
 Encuentro internacional «Cuidar en un mundo interdependiente: ética, derecho y políticas de cuidado», que se realizará en la Universidad Alberto Hurtado los días 16, 17 y 18 de noviembre.  
 
