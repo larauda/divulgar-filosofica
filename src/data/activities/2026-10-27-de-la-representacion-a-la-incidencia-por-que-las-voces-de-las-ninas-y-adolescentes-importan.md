@@ -3,7 +3,8 @@ title: "De la Representación a la incidencia: Por qué las voces de las niñas 
   adolescentes importan"
 type: Charla
 image: /uploads/captura-de-pantalla-2026-10-14-a-las-203456.jpg
-modality: Híbrida
+date: 2026-10-27
+modality: Presencial
 status: Próxima edición
 excerpt: Charla sobre participación e incidencia social dirigida a estudiantes
   de 7.º básico a 4.º medio.
