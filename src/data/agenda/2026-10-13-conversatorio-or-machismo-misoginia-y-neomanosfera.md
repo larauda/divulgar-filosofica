@@ -13,7 +13,7 @@ excerpt: La directora del Magíster en Alta Dirección Pública y Académica de 
   Pía Méndez, participará en el conversatorio “Machismo, Misoginia y
   Neomanósfera”, actividad desarrollada en el marco de su proyecto postdoctoral
   FONDECYT.
-featured: true
+featured: false
 ---
 La directora del Magíster en Alta Dirección Pública y Académica de la Escuela de Gobierno y Administración Pública de la Universidad Mayor, María Pía Méndez, participará en el conversatorio “Machismo, Misoginia y Neomanósfera”, actividad desarrollada en el marco de su proyecto postdoctoral FONDECYT.  
 La instancia también contará con la participación de Sandra Vera (Universidad Alberto Hurtado), María Esperanza Casullo (Pontificia Universidad Católica de Chile), Lieta Vivaldi (Universidad Alberto Hurtado) y Miriam Jerade (Universidad Adolfo Ibáñez).  
