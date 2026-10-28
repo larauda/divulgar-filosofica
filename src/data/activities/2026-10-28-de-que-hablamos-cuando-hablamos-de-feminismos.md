@@ -2,7 +2,6 @@
 title: ¿De qué hablamos cuando hablamos de feminismos?
 type: Charla
 image: /uploads/captura-de-pantalla-2026-10-28-a-las-114019.png
-date: 2026-10-28
 modality: Presencial
 status: Próxima edición
 excerpt: Charla dirigida a estudiantes de enseñanza media que propone una
