@@ -1,5 +1,5 @@
 ---
-title: Maternidad y el castigo del capitalismo [Edición II]
+title: Maternidad y el castigo del capitalismo
 type: Taller
 image: /uploads/silvia-federicidcsfuegq.png
 date: 2026-11-21
