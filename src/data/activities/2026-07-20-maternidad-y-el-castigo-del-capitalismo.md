@@ -1,27 +1,33 @@
 ---
-title: Maternidad y el castigo del capitalismo
+title: Maternidad y el castigo del capitalismo [Edición II]
 type: Taller
 image: /uploads/silvia-federicidcsfuegq.png
-date: 2026-05-20
+date: 2026-11-21
 modality: Presencial
 location: Concepción
-status: Finalizada
+status: Inscripciones abiertas
 registrationUrl: "#"
-excerpt: Un taller de filosofía política feminista que aborda las reflexiones de
-  Silvia Federici, Nancy Fraser e Iris Marion Young sobre la maternidad, los
-  cuidados y las estructuras del capitalismo contemporáneo.
+excerpt: >+
+  Taller/encuentro de Filosofía Política Feminista.
+
+  Conversaremos en torno al trabajo de Silvia Federici, Nancy Fraser e Iris
+  Marion Young, para reflexionar sobre cómo el capitalismo se sostiene en los
+  cuidados, con un enfoque particular en la maternidad.
+
+
+  A partir de este punto, pensaremos juntas por qué, cuando las mujeres intentan
+  volver a lo social o laboral, se encuentran con distintos obstáculos,
+  desigualdades e incluso castigos que no son casuales, sino estructurales.
 ---
-**Maternidad y el castigo del capitalismo** fue un taller de filosofía política feminista centrado en la lectura y discusión con los aportes de **Silvia Federici**, **Nancy Fraser** e **Iris Marion Young**.
+Inscripciones vía correo: ++[divulgar.filosofica@gmail.com](mailto:divulgar.filosofica@gmail.com)++
 
-A partir de sus contribuciones, se reflexionó sobre el trabajo reproductivo, los cuidados, la construcción social de la maternidad y las formas en que el capitalismo ha condicionado históricamente la vida de las mujeres y las comunidades.
+Inscripciones vía intagram: ++[https://www.instagram.com/divulgar.filosofica](https://www.instagram.com/divulgar.filosofica)++
 
-El encuentro promovió un espacio de conversación crítica, intercambio de experiencias y pensamiento colectivo, invitando a comprender la maternidad desde una perspectiva política, económica y social.
+Sábado 21 de Noviembre 17:00hrs, Linconyán, Concepción.
 
-**Temáticas abordadas:**
+No requiere conocimientos previos, comenzamos desde CERO.
 
-- Trabajo doméstico y de cuidados.
-- Maternidad y reproducción social.
-- Capitalismo y división sexual del trabajo.
-- Aportes de Silvia Federici, Nancy Fraser e Iris Marion Young.
-- Debate y reflexión colectiva.
+¿Quieres que este taller se realice en tu organización, institución o comunidad? Escríbenos para solicitar una cotización o realizar consultas.
+
+Contacto: [divulgar.filosofica@gmail.com](mailto:divulgar.filosofica@gmail.com)
 
