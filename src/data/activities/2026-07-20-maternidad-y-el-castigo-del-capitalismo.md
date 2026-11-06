@@ -8,20 +8,17 @@ location: Concepción
 status: Inscripciones abiertas
 registrationUrl: "#"
 excerpt: >
-  Taller/encuentro de Filosofía Política Feminista.
-
   Conversaremos en torno al trabajo de Silvia Federici, Nancy Fraser e Iris
   Marion Young, para reflexionar sobre cómo el capitalismo se sostiene en los
   cuidados, con un enfoque particular en la maternidad.
 
-
-  A partir de este punto, pensaremos juntas por qué, cuando las mujeres intentan
-  volver a lo social o laboral, se encuentran con distintos obstáculos,
-  desigualdades e incluso castigos que no son casuales, sino estructurales.
+  Juntas pensaremos por qué, cuando las mujeres intentan volver a lo social o
+  laboral, se encuentran con distintos obstáculos, desigualdades e incluso
+  castigos que no son casuales, sino estructurales.
 ---
 Inscripciones vía correo: ++[divulgar.filosofica@gmail.com](mailto:divulgar.filosofica@gmail.com)++
 
-Inscripciones vía intagram**:** ++[https://www.instagram.com/divulgar.filosofica](https://www.instagram.com/divulgar.filosofica)++
+Inscripciones vía instagram: ++[https://www.instagram.com/divulgar.filosofica](https://www.instagram.com/divulgar.filosofica)++
 
 Sábado 21 de Noviembre 17:00hrs, Linconyán, Concepción.
 
