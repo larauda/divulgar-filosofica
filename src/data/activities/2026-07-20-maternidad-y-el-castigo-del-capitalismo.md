@@ -7,7 +7,7 @@ modality: Presencial
 location: Concepción
 status: Inscripciones abiertas
 registrationUrl: "#"
-excerpt: >+
+excerpt: >
   Taller/encuentro de Filosofía Política Feminista.
 
   Conversaremos en torno al trabajo de Silvia Federici, Nancy Fraser e Iris
@@ -19,9 +19,9 @@ excerpt: >+
   volver a lo social o laboral, se encuentran con distintos obstáculos,
   desigualdades e incluso castigos que no son casuales, sino estructurales.
 ---
-Inscripciones vía correo: ++[divulgar.filosofica@gmail.com](mailto:divulgar.filosofica@gmail.com)++
+Inscripciones vía correo**: ++[divulgar.filosofica@gmail.com](mailto:divulgar.filosofica@gmail.com)++**
 
-Inscripciones vía intagram: ++[https://www.instagram.com/divulgar.filosofica](https://www.instagram.com/divulgar.filosofica)++
+Inscripciones vía intagram: **++[https://www.instagram.com/divulgar.filosofica](https://www.instagram.com/divulgar.filosofica)++**
 
 Sábado 21 de Noviembre 17:00hrs, Linconyán, Concepción.
 
