@@ -16,9 +16,9 @@ excerpt: >
   laboral, se encuentran con distintos obstáculos, desigualdades e incluso
   castigos que no son casuales, sino estructurales.
 ---
-Inscripciones vía correo: ++[divulgar.filosofica@gmail.com](mailto:divulgar.filosofica@gmail.com)++
+Inscripciones vía correo: [divulgar.filosofica@gmail.com](mailto:divulgar.filosofica@gmail.com)
 
-Inscripciones vía instagram: ++[https://www.instagram.com/divulgar.filosofica](https://www.instagram.com/divulgar.filosofica)++
+Inscripciones vía instagram: [https://www.instagram.com/divulgar.filosofica](https://www.instagram.com/divulgar.filosofica)
 
 Sábado 21 de Noviembre 17:00hrs, Linconyán, Concepción.
 
